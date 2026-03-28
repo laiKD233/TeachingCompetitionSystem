@@ -1,0 +1,1126 @@
+{
+  "info": {
+    "name": "教学竞赛管理系统 API",
+    "description": "教学竞赛管理系统的完整 API 接口文档",
+    "version": "1.0.0",
+    "schema": "https://www.getpostman.com/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "认证模块",
+      "item": [
+        {
+          "name": "用户登录",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "使用用户名和密码登录，获取 JWT Token"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.code === 0) {",
+                  "    pm.collectionVariables.set('access_token', jsonData.data.token);",
+                  "    console.log('Token 已保存：' + jsonData.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "用户注册",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"student1\",\n  \"password\": \"123456\",\n  \"name\": \"张三\",\n  \"studentId\": \"2024001\",\n  \"college\": \"计算机学院\",\n  \"phone\": \"13800138000\",\n  \"email\": \"student1@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "退出登录",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "用户模块",
+      "item": [
+        {
+          "name": "获取当前用户信息",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/user/current",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "current"]
+            }
+          }
+        },
+        {
+          "name": "更新用户信息",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"李四\",\n  \"college\": \"软件学院\",\n  \"className\": \"软件工程 2101\",\n  \"phone\": \"13900139000\",\n  \"email\": \"lisi@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/user/update",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "update"]
+            }
+          }
+        },
+        {
+          "name": "修改密码",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"123456\",\n  \"newPassword\": \"new123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/user/password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "password"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "竞赛模块",
+      "item": [
+        {
+          "name": "获取竞赛列表（公开）",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/competition/public/list?page=1&size=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "competition", "public", "list"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "keyword",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "获取竞赛详情",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/competition/public/detail/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "competition", "public", "detail", "1"]
+            }
+          }
+        },
+        {
+          "name": "创建竞赛",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"2024 年大学生程序设计竞赛\",\n  \"type\": \"程序设计\",\n  \"theme\": \"创新引领未来\",\n  \"description\": \"面向全校学生的程序设计竞赛\",\n  \"registrationStart\": \"2024-04-01 00:00:00\",\n  \"registrationEnd\": \"2024-04-30 23:59:59\",\n  \"submissionDeadline\": \"2024-05-15 23:59:59\",\n  \"rules\": \"参赛规则说明...\",\n  \"submissionRequirements\": \"提交要求说明...\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/competition",
+              "host": ["{{base_url}}"],
+              "path": ["api", "competition"]
+            }
+          }
+        },
+        {
+          "name": "管理员竞赛列表",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/competition/admin/list?page=1&size=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "competition", "admin", "list"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "更新竞赛",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"2024 年大学生程序设计竞赛（更新）\",\n  \"theme\": \"AI 改变世界\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/competition/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "competition", "1"]
+            }
+          }
+        },
+        {
+          "name": "删除竞赛",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/api/competition/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "competition", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "报名模块",
+      "item": [
+        {
+          "name": "提交报名",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"competitionId\": 1,\n  \"projectName\": \"智能推荐系统\",\n  \"advisor\": \"王教授\",\n  \"description\": \"基于机器学习的个性化推荐系统\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/registration",
+              "host": ["{{base_url}}"],
+              "path": ["api", "registration"]
+            }
+          }
+        },
+        {
+          "name": "我的报名",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/registration/my?page=1&size=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "registration", "my"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "通过审核",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/api/registration/1/approve",
+              "host": ["{{base_url}}"],
+              "path": ["api", "registration", "1", "approve"]
+            }
+          }
+        },
+        {
+          "name": "拒绝报名",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"registrationId\": 1,\n  \"rejectReason\": \"项目不符合竞赛主题\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/registration/reject",
+              "host": ["{{base_url}}"],
+              "path": ["api", "registration", "reject"]
+            }
+          }
+        },
+        {
+          "name": "管理员查看报名",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/registration/admin/list?competitionId=1&page=1&size=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "registration", "admin", "list"],
+              "query": [
+                {
+                  "key": "competitionId",
+                  "value": "1"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "作品模块",
+      "item": [
+        {
+          "name": "上传作品",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "competitionId",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "registrationId",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "title",
+                  "value": "智能推荐系统",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "基于深度学习的推荐系统",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/work",
+              "host": ["{{base_url}}"],
+              "path": ["api", "work"]
+            }
+          }
+        },
+        {
+          "name": "我的作品",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/work/my?page=1&size=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "work", "my"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "作品详情",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/work/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "work", "1"]
+            }
+          }
+        },
+        {
+          "name": "管理员查看作品",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/work/admin/list?competitionId=1&page=1&size=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "work", "admin", "list"],
+              "query": [
+                {
+                  "key": "competitionId",
+                  "value": "1"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "评审模块",
+      "item": [
+        {
+          "name": "分配评审任务",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"workId\": 1,\n      \"reviewerId\": 2\n    },\n    {\n      \"workId\": 2,\n      \"reviewerId\": 2\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/review/assign",
+              "host": ["{{base_url}}"],
+              "path": ["api", "review", "assign"]
+            }
+          }
+        },
+        {
+          "name": "提交评分",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"taskId\": 1,\n  \"score\": 85.5,\n  \"comment\": \"作品创新性很好，但实现有待完善\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/review/score",
+              "host": ["{{base_url}}"],
+              "path": ["api", "review", "score"]
+            }
+          }
+        },
+        {
+          "name": "我的评审任务",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/review/my-tasks",
+              "host": ["{{base_url}}"],
+              "path": ["api", "review", "my-tasks"]
+            }
+          }
+        },
+        {
+          "name": "查看成绩",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/review/scores/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "review", "scores", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "奖项模块",
+      "item": [
+        {
+          "name": "发布奖项",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"competitionId\": 1,\n  \"items\": [\n    {\n      \"workId\": 1,\n      \"awardLevel\": \"一等奖\"\n    },\n    {\n      \"workId\": 2,\n      \"awardLevel\": \"二等奖\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/award/publish",
+              "host": ["{{base_url}}"],
+              "path": ["api", "award", "publish"]
+            }
+          }
+        },
+        {
+          "name": "结果公示",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/award/announcement/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "award", "announcement", "1"]
+            }
+          }
+        },
+        {
+          "name": "获奖列表",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/award/list/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "award", "list", "1"]
+            }
+          }
+        },
+        {
+          "name": "成绩结果",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/award/results/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "award", "results", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "超级管理员",
+      "item": [
+        {
+          "name": "用户列表",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/super-admin/users?page=1&size=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "super-admin", "users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "添加用户",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"teacher1\",\n  \"password\": \"123456\",\n  \"name\": \"王老师\",\n  \"role\": \"TEACHER\",\n  \"status\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/super-admin/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "super-admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "更新用户",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"王教授\",\n  \"email\": \"wang@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/super-admin/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "super-admin", "users", "1"]
+            }
+          }
+        },
+        {
+          "name": "删除用户",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/api/super-admin/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "super-admin", "users", "1"]
+            }
+          }
+        },
+        {
+          "name": "冻结用户",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/api/super-admin/users/1/freeze",
+              "host": ["{{base_url}}"],
+              "path": ["api", "super-admin", "users", "1", "freeze"]
+            }
+          }
+        },
+        {
+          "name": "解冻用户",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/api/super-admin/users/1/unfreeze",
+              "host": ["{{base_url}}"],
+              "path": ["api", "super-admin", "users", "1", "unfreeze"]
+            }
+          }
+        },
+        {
+          "name": "重置密码",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/api/super-admin/users/1/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "super-admin", "users", "1", "reset-password"]
+            }
+          }
+        },
+        {
+          "name": "操作日志",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/super-admin/logs?page=1&size=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "super-admin", "logs"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "文件模块",
+      "item": [
+        {
+          "name": "文件上传",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/file/upload",
+              "host": ["{{base_url}}"],
+              "path": ["api", "file", "upload"]
+            }
+          }
+        },
+        {
+          "name": "文件下载",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/file/download/test.txt",
+              "host": ["{{base_url}}"],
+              "path": ["api", "file", "download", "test.txt"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
