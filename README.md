@@ -1,0 +1,2 @@
+# TeachingCompetitionSystem
+基于vue3+springboot的竞赛管理系统
