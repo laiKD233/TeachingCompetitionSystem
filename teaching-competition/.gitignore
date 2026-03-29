@@ -1,0 +1,34 @@
+# === 敏感配置（含密钥/Token） ===
+config/
+application-local.yml
+.env
+
+# === Java / Spring Boot ===
+backend/target/
+*.class
+*.jar
+*.war
+*.log
+
+# === Node / Vue ===
+frontend/node_modules/
+frontend/dist/
+
+# === IDE ===
+.idea/
+.vscode/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# === OS ===
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# === 其他 ===
+*.bak
+*.tmp

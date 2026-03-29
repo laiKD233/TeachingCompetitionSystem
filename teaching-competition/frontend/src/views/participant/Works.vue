@@ -149,8 +149,7 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getMyWorks, uploadWork, updateWork, deleteWork } from '@/api/work'
-import { downloadFile } from '@/api/file'
-import { getPublicCompetitions } from '@/api/competition'
+import { getRegistrations } from '@/api/registration'
 
 const loading = ref(false)
 const uploading = ref(false)
@@ -205,12 +204,23 @@ const fetchWorks = async () => {
 
 const fetchCompetitionOptions = async () => {
   try {
-    const res = await getPublicCompetitions({
-      status: 'ONGOING',
+    const res = await getRegistrations({
+      status: 'APPROVED',
       page: 1,
       size: 100
     })
-    competitionOptions.value = res.data.records
+    // 从已通过的报名记录中提取竞赛列表（去重）
+    const records = res.data.records || []
+    const competitionMap = new Map()
+    records.forEach(item => {
+      if (item.competitionId && !competitionMap.has(item.competitionId)) {
+        competitionMap.set(item.competitionId, {
+          id: item.competitionId,
+          name: item.competitionName
+        })
+      }
+    })
+    competitionOptions.value = Array.from(competitionMap.values())
   } catch (error) {
     console.error(error)
   }
@@ -308,18 +318,12 @@ const handleUpload = async () => {
   })
 }
 
-const handleDownload = async (row) => {
-  try {
-    const filename = row.fileUrl ? row.fileUrl.split('/').pop() : ''
-    if (!filename) {
-      ElMessage.warning('文件路径无效')
-      return
-    }
-    await downloadFile(filename)
-  } catch (error) {
-    ElMessage.error('下载失败')
-    console.error(error)
+const handleDownload = (row) => {
+  if (!row.fileUrl) {
+    ElMessage.warning('文件路径无效')
+    return
   }
+  window.open(row.fileUrl, '_blank')//直接打开新窗口来下载文件
 }
 
 const handleDelete = async (row) => {
