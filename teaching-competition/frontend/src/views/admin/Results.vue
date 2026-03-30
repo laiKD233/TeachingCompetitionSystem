@@ -1,8 +1,17 @@
 <template>
   <div class="results-page">
     <!-- 页面标题 -->
-    <div class="page-header">
-      <h1 class="page-title">成绩公示</h1>
+    <div class="page-header-wrapper">
+      <div class="header-decoration">
+        <div class="deco-circle deco-circle-1"></div>
+        <div class="deco-circle deco-circle-2"></div>
+      </div>
+      <div class="page-header">
+        <div class="header-content">
+          <h1 class="page-title">成绩公示</h1>
+          <p class="page-subtitle">发布竞赛成绩与奖项信息</p>
+        </div>
+      </div>
     </div>
 
     <!-- 筛选 -->
@@ -305,17 +314,58 @@ const getAwardType = (award) => {
   padding: 0;
 }
 
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.page-header-wrapper {
+  position: relative;
+  padding: 32px 32px 24px;
   margin-bottom: 24px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e293b 100%);
+  overflow: hidden;
+}
+
+.header-decoration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.12;
+}
+
+.deco-circle-1 {
+  width: 160px;
+  height: 160px;
+  background: #43e97b;
+  top: -50px;
+  right: -30px;
+}
+
+.deco-circle-2 {
+  width: 100px;
+  height: 100px;
+  background: #fbbf24;
+  bottom: -20px;
+  left: 15%;
+}
+
+.page-header {
+  position: relative;
+  z-index: 1;
 }
 
 .page-title {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #ffffff;
+  margin: 0 0 4px;
+}
+
+.page-subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
   margin: 0;
 }
 

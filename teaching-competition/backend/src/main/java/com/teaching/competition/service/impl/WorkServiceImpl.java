@@ -5,8 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.teaching.competition.common.PageResult;
 import com.teaching.competition.dto.WorkDTO;
+import com.teaching.competition.entity.Competition;
+import com.teaching.competition.entity.Registration;
 import com.teaching.competition.entity.Work;
 import com.teaching.competition.exception.BusinessException;
+import com.teaching.competition.mapper.CompetitionMapper;
+import com.teaching.competition.mapper.RegistrationMapper;
 import com.teaching.competition.mapper.WorkMapper;
 import com.teaching.competition.service.OssService;
 import com.teaching.competition.service.WorkService;
@@ -21,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements WorkService {
 
     private final OssService ossService;
+    private final RegistrationMapper registrationMapper;
+    private final CompetitionMapper competitionMapper;
 
     @Override
     @Transactional
@@ -29,9 +35,21 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
             throw new BusinessException("文件不能为空");
         }
 
+        // 查找当前用户对该竞赛的已通过报名记录
+        Registration registration = registrationMapper.selectOne(
+                new LambdaQueryWrapper<Registration>()
+                        .eq(Registration::getCompetitionId, dto.getCompetitionId())
+                        .eq(Registration::getUserId, userId)
+                        .eq(Registration::getStatus, "APPROVED")
+        );
+        if (registration == null) {
+            throw new BusinessException("您未报名该竞赛或报名尚未审核通过");
+        }
+
         Work work = new Work();
         BeanUtils.copyProperties(dto, work);
         work.setUserId(userId);
+        work.setRegistrationId(registration.getId());
 
         String fileUrl = ossService.upload(file, "works");
         work.setFileUrl(fileUrl);
@@ -76,6 +94,16 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
 
         Page<Work> result = page(workPage, wrapper);
 
+        // 填充竞赛名称
+        for (Work work : result.getRecords()) {
+            if (work.getCompetitionId() != null) {
+                Competition competition = competitionMapper.selectById(work.getCompetitionId());
+                if (competition != null) {
+                    work.setCompetitionName(competition.getName());
+                }
+            }
+        }
+
         return new PageResult<>(result.getRecords(), result.getTotal(), size, page);
     }
 
@@ -115,6 +143,16 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
                 .orderByDesc(Work::getCreatedAt);
 
         Page<Work> result = page(workPage, wrapper);
+
+        // 填充竞赛名称
+        for (Work work : result.getRecords()) {
+            if (work.getCompetitionId() != null) {
+                Competition competition = competitionMapper.selectById(work.getCompetitionId());
+                if (competition != null) {
+                    work.setCompetitionName(competition.getName());
+                }
+            }
+        }
 
         return new PageResult<>(result.getRecords(), result.getTotal(), size, page);
     }

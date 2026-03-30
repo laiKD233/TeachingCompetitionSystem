@@ -1,9 +1,18 @@
 <template>
   <div class="competitions-page">
     <!-- 页面标题 -->
-    <div class="page-header">
-      <h1 class="page-title">竞赛列表</h1>
-      <p class="page-subtitle">查看当前可报名的竞赛</p>
+    <div class="page-header-wrapper">
+      <div class="header-decoration">
+        <div class="deco-circle deco-circle-1"></div>
+        <div class="deco-circle deco-circle-2"></div>
+        <div class="deco-circle deco-circle-3"></div>
+      </div>
+      <div class="page-header">
+        <div class="header-content">
+          <h1 class="page-title">竞赛列表</h1>
+          <p class="page-subtitle">探索当前可报名的竞赛，展示你的才华</p>
+        </div>
+      </div>
     </div>
     
     <!-- 搜索和筛选 -->
@@ -187,30 +196,86 @@ watch([searchKeyword, filterStatus, filterType], () => {
 <style scoped>
 .competitions-page {
   padding: 0;
+  position: relative;
+}
+
+.page-header-wrapper {
+  position: relative;
+  padding: 48px 32px 36px;
+  margin-bottom: 32px;
+  border-radius: var(--radius-2xl);
+  background: linear-gradient(135deg, var(--slate-800) 0%, var(--primary-700) 50%, var(--slate-800) 100%);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.header-decoration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+  filter: blur(1px);
+}
+
+.deco-circle-1 {
+  width: 240px;
+  height: 240px;
+  background: var(--secondary-500);
+  top: -80px;
+  right: -60px;
+}
+
+.deco-circle-2 {
+  width: 160px;
+  height: 160px;
+  background: var(--success-500);
+  bottom: -40px;
+  left: 8%;
+}
+
+.deco-circle-3 {
+  width: 100px;
+  height: 100px;
+  background: var(--primary-500);
+  top: 25%;
+  right: 25%;
+  opacity: 0.1;
 }
 
 .page-header {
-  margin-bottom: 30px;
+  position: relative;
+  z-index: 1;
 }
 
 .page-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-white);
   margin-bottom: 8px;
+  letter-spacing: -0.5px;
 }
 
 .page-subtitle {
-  font-size: 14px;
-  color: var(--text-secondary);
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
   margin: 0;
+  font-weight: 500;
 }
 
 .filter-section {
   display: flex;
-  gap: 16px;
-  margin-bottom: 30px;
+  gap: 20px;
+  margin-bottom: 36px;
   flex-wrap: wrap;
+  background: var(--bg-secondary);
+  padding: 20px;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
 }
 
 .search-input {
@@ -220,7 +285,7 @@ watch([searchKeyword, filterStatus, filterType], () => {
 }
 
 .filter-select {
-  width: 160px;
+  width: 180px;
 }
 
 /* 卡片网格 */
@@ -231,111 +296,145 @@ watch([searchKeyword, filterStatus, filterType], () => {
 }
 
 .competition-card {
-  background: #fff;
-  border-radius: 12px;
+  background: var(--bg-white);
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-md);
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: all var(--transition-normal);
+  position: relative;
+  border: 1px solid var(--border-light);
 }
 
 .competition-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: var(--shadow-2xl);
+  border-color: var(--primary-300);
+}
+
+.competition-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-500), var(--secondary-500));
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.competition-card:hover::before {
+  opacity: 1;
 }
 
 /* 封面 */
 .card-cover {
   position: relative;
   width: 100%;
-  height: 180px;
+  height: 200px;
   overflow: hidden;
-  background: #f0f2f5;
+  background: var(--bg-secondary);
 }
 
 .cover-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
+  transition: transform var(--transition-slow);
 }
 
 .competition-card:hover .cover-img {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 .status-badge {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 4px 12px;
+  top: 16px;
+  right: 16px;
+  padding: 6px 14px;
   border-radius: 20px;
   font-size: 12px;
-  font-weight: 600;
-  color: #fff;
-  backdrop-filter: blur(4px);
+  font-weight: 700;
+  color: var(--text-white);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-sm);
+  z-index: 1;
 }
 
-.status-badge.status-REGISTRATION { background: rgba(103, 194, 58, 0.9); }
-.status-badge.status-PUBLISHED { background: rgba(64, 158, 255, 0.9); }
-.status-badge.status-ONGOING { background: rgba(230, 162, 60, 0.9); }
-.status-badge.status-REVIEWED { background: rgba(144, 147, 153, 0.9); }
+.status-badge.status-REGISTRATION { background: var(--success-500); }
+.status-badge.status-PUBLISHED { background: var(--primary-500); }
+.status-badge.status-ONGOING { background: var(--warning-500); }
+.status-badge.status-REVIEWED { background: var(--slate-500); }
 .status-badge.status-ANNOUNCED,
-.status-badge.status-ANNOUNCEMENT { background: rgba(64, 158, 255, 0.9); }
-.status-badge.status-ENDED { background: rgba(144, 147, 153, 0.9); }
-.status-badge.status-DRAFT { background: rgba(144, 147, 153, 0.7); }
+.status-badge.status-ANNOUNCEMENT { background: var(--secondary-500); }
+.status-badge.status-ENDED { background: var(--slate-600); }
+.status-badge.status-DRAFT { background: var(--slate-500); }
 
 /* 内容 */
 .card-body {
-  padding: 16px 20px 20px;
+  padding: 24px;
 }
 
 .card-title {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
   color: var(--text-primary);
-  margin: 0 0 8px;
+  margin: 0 0 12px;
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  transition: color var(--transition-fast);
+}
+
+.competition-card:hover .card-title {
+  color: var(--primary-600);
 }
 
 .card-desc {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-secondary);
   line-height: 1.6;
-  margin: 0 0 14px;
+  margin: 0 0 16px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  font-weight: 500;
 }
 
 .card-meta {
   display: flex;
   align-items: center;
-  gap: 16px;
-  font-size: 12px;
-  color: #909399;
+  gap: 20px;
+  font-size: 13px;
+  color: var(--text-tertiary);
 }
 
 .meta-item {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .meta-item .el-icon {
-  font-size: 14px;
+  font-size: 16px;
+  transition: transform var(--transition-fast);
+}
+
+.meta-item:hover .el-icon {
+  transform: scale(1.2);
+  color: var(--primary-500);
 }
 
 /* 分页 */
 .pagination-section {
   display: flex;
   justify-content: center;
-  padding: 30px 0 10px;
+  padding: 40px 0 20px;
 }
 
 /* 响应式 */
@@ -346,10 +445,11 @@ watch([searchKeyword, filterStatus, filterType], () => {
 }
 
 @media (max-width: 768px) {
-  .page-title { font-size: 24px; }
-  .filter-section { flex-direction: column; }
+  .page-title { font-size: 28px; }
+  .filter-section { flex-direction: column; padding: 16px; }
   .search-input, .filter-select { width: 100%; max-width: none; }
-  .cards-grid { grid-template-columns: 1fr; gap: 16px; }
-  .card-cover { height: 160px; }
+  .cards-grid { grid-template-columns: 1fr; gap: 20px; }
+  .card-cover { height: 180px; }
+  .page-header-wrapper { padding: 32px 24px; }
 }
 </style>

@@ -1,73 +1,107 @@
 <template>
   <div class="competition-detail-page" v-loading="loading">
-    <el-card v-if="competition" class="detail-card">
-      <template #header>
-        <div class="header-content">
-          <h1 class="competition-title">{{ competition.name }}</h1>
-          <el-tag :type="getStatusType(competition.status)" size="large" effect="plain">
+    <!-- 顶部封面区域 -->
+    <div class="detail-hero" v-if="competition">
+      <div class="hero-bg">
+        <img v-if="competition.coverImage" :src="competition.coverImage" :alt="competition.name" class="hero-img" />
+        <div class="hero-overlay"></div>
+      </div>
+      <div class="hero-content">
+        <div class="hero-badge">
+          <el-tag :type="getStatusType(competition.status)" size="large" effect="dark" round>
             {{ getStatusText(competition.status) }}
           </el-tag>
         </div>
-      </template>
-
-      <div class="detail-content">
-        <!-- 封面图 -->
-        <div class="cover-section" v-if="competition.coverImage">
-          <img :src="competition.coverImage" :alt="competition.name" class="cover-image" />
+        <h1 class="hero-title">{{ competition.name }}</h1>
+        <div class="hero-meta">
+          <span class="meta-item">
+            <el-icon><Collection /></el-icon>
+            {{ competition.type }}
+          </span>
+          <span class="meta-item" v-if="competition.theme">
+            <el-icon><Flag /></el-icon>
+            {{ competition.theme }}
+          </span>
         </div>
+      </div>
+    </div>
 
-        <!-- 基本信息 -->
-        <div class="info-section">
-          <h3>竞赛信息</h3>
-          <div class="info-grid">
-            <div class="info-item">
-              <span class="label">竞赛类型：</span>
-              <span class="value">{{ competition.type }}</span>
+    <div class="detail-body" v-if="competition">
+      <!-- 基本信息 -->
+      <div class="info-section">
+        <h3 class="section-title">
+          <el-icon><InfoFilled /></el-icon>
+          竞赛信息
+        </h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">竞赛类型</span>
+            <span class="info-value">{{ competition.type }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">竞赛主题</span>
+            <span class="info-value">{{ competition.theme || '未设置' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 时间信息 -->
+      <div class="time-section">
+        <h3 class="section-title">
+          <el-icon><Clock /></el-icon>
+          时间安排
+        </h3>
+        <div class="timeline-grid">
+          <div class="timeline-item">
+            <div class="timeline-dot dot-start"></div>
+            <div class="timeline-content">
+              <span class="timeline-label">报名开始</span>
+              <span class="timeline-date">{{ formatDate(competition.registrationStart) }}</span>
             </div>
-            <div class="info-item">
-              <span class="label">竞赛主题：</span>
-              <span class="value">{{ competition.theme || '未设置' }}</span>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot dot-end"></div>
+            <div class="timeline-content">
+              <span class="timeline-label">报名截止</span>
+              <span class="timeline-date">{{ formatDate(competition.registrationEnd) }}</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot dot-deadline"></div>
+            <div class="timeline-content">
+              <span class="timeline-label">作品截止</span>
+              <span class="timeline-date">{{ formatDate(competition.submissionDeadline) }}</span>
             </div>
           </div>
         </div>
-
-        <!-- 时间信息 -->
-        <div class="time-section">
-          <h3>时间安排</h3>
-          <el-timeline>
-            <el-timeline-item timestamp="报名开始时间" placement="top">
-              <span>{{ formatDate(competition.registrationStart) }}</span>
-            </el-timeline-item>
-            <el-timeline-item timestamp="报名截止时间" placement="top">
-              <span>{{ formatDate(competition.registrationEnd) }}</span>
-            </el-timeline-item>
-            <el-timeline-item timestamp="作品提交截止" placement="top">
-              <span>{{ formatDate(competition.submissionDeadline) }}</span>
-            </el-timeline-item>
-          </el-timeline>
-        </div>
-
-        <!-- 竞赛描述 -->
-        <div class="description-section">
-          <h3>竞赛描述</h3>
-          <p class="description-text">{{ competition.description || '暂无描述' }}</p>
-        </div>
-
-        <!-- 竞赛规则 -->
-        <div class="rules-section" v-if="competition.rules">
-          <h3>竞赛规则</h3>
-          <div class="rules-content" v-html="competition.rules"></div>
-        </div>
-
-        <!-- 报名按钮 -->
-        <div class="action-section" v-if="competition.status === 'REGISTRATION'">
-          <el-button type="primary" size="large" @click="showRegisterDialog = true">
-            <el-icon><Edit /></el-icon>
-            立即报名
-          </el-button>
-        </div>
       </div>
-    </el-card>
+
+      <!-- 竞赛描述 -->
+      <div class="desc-section" v-if="competition.description">
+        <h3 class="section-title">
+          <el-icon><Document /></el-icon>
+          竞赛描述
+        </h3>
+        <div class="desc-content">{{ competition.description }}</div>
+      </div>
+
+      <!-- 竞赛规则 -->
+      <div class="rules-section" v-if="competition.rules">
+        <h3 class="section-title">
+          <el-icon><List /></el-icon>
+          竞赛规则
+        </h3>
+        <div class="rules-content" v-html="competition.rules"></div>
+      </div>
+
+      <!-- 报名按钮 -->
+      <div class="action-section" v-if="competition.status === 'REGISTRATION'">
+        <el-button type="primary" size="large" @click="showRegisterDialog = true" class="cta-button">
+          <el-icon><Edit /></el-icon>
+          立即报名
+        </el-button>
+      </div>
+    </div>
 
     <!-- 报名弹窗 -->
     <el-dialog
@@ -212,124 +246,296 @@ const formatDate = (date) => {
 
 <style scoped>
 .competition-detail-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.detail-card {
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.competition-title {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.detail-content {
-  padding: 20px 0;
-}
-
-.cover-section {
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.cover-image {
   max-width: 100%;
-  max-height: 400px;
-  border-radius: 8px;
-  box-shadow: var(--shadow-md);
+  padding: 0;
+}
+
+/* Hero区域 */
+.detail-hero {
+  position: relative;
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  margin-bottom: 32px;
+  min-height: 280px;
+  box-shadow: var(--shadow-lg);
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.detail-hero:hover .hero-img {
+  transform: scale(1.05);
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.7));
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 48px 36px;
+}
+
+.hero-badge {
+  margin-bottom: 20px;
+}
+
+.hero-badge :deep(.el-tag) {
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hero-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text-white);
+  margin: 0 0 20px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.hero-meta .meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+.hero-meta .el-icon {
+  color: var(--primary-400);
+  font-size: 18px;
+}
+
+/* 主体内容 */
+.detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .info-section,
 .time-section,
-.description-section,
+.desc-section,
 .rules-section {
-  margin-bottom: 30px;
+  background: var(--bg-white);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+  transition: all var(--transition-normal);
 }
 
-h3 {
-  margin-bottom: 16px;
-  font-size: 18px;
-  font-weight: 600;
+.info-section:hover,
+.time-section:hover,
+.desc-section:hover,
+.rules-section:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 700;
   color: var(--text-primary);
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--bg-secondary);
+}
+
+.section-title .el-icon {
+  color: var(--primary-500);
+  font-size: 22px;
 }
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
 }
 
 .info-item {
   display: flex;
-  align-items: center;
-  padding: 12px;
-  background: var(--bg-light);
-  border-radius: 8px;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 18px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--primary-500);
+  transition: all var(--transition-normal);
 }
 
-.label {
+.info-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.info-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 700;
+}
+
+.info-value {
+  font-size: 16px;
   font-weight: 600;
-  color: var(--text-secondary);
-  margin-right: 8px;
-}
-
-.value {
   color: var(--text-primary);
 }
 
-.description-text {
+/* 时间线 */
+.timeline-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 0;
+}
+
+.timeline-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 3px solid var(--bg-white);
+  box-shadow: 0 0 0 4px var(--bg-secondary);
+  z-index: 2;
+  position: relative;
+}
+
+.dot-start { background: var(--success-500); }
+.dot-end { background: var(--warning-500); }
+.dot-deadline { background: var(--error-500); }
+
+.timeline-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  padding: 16px 20px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  position: relative;
+  transition: all var(--transition-normal);
+}
+
+.timeline-content:hover {
+  background: var(--bg-tertiary);
+  transform: translateX(8px);
+}
+
+.timeline-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.timeline-date {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.desc-content {
+  font-size: 15px;
   line-height: 1.8;
   color: var(--text-secondary);
   white-space: pre-wrap;
+  font-weight: 500;
 }
 
 .rules-content {
-  background: var(--bg-light);
-  padding: 20px;
-  border-radius: 8px;
+  background: var(--bg-secondary);
+  padding: 24px;
+  border-radius: var(--radius-lg);
   line-height: 1.8;
+  font-size: 15px;
+  border-left: 4px solid var(--secondary-500);
 }
 
+/* 报名按钮 */
 .action-section {
   text-align: center;
-  padding: 40px 0;
-  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-  border-radius: 12px;
+  padding: 36px 32px;
+  background: linear-gradient(135deg, var(--bg-white) 0%, var(--bg-secondary) 100%);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-light);
 }
 
-.register-form {
-  padding: 20px 0;
+.cta-button {
+  padding: 16px 48px;
+  font-size: 17px;
+  font-weight: 700;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-700)) !important;
+  border: none !important;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+  transition: all var(--transition-normal);
+  letter-spacing: 0.5px;
+}
+
+.cta-button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(59, 130, 246, 0.6) !important;
+}
+
+.cta-button:active {
+  transform: translateY(0) scale(0.98);
 }
 
 @media (max-width: 768px) {
-  .competition-detail-page {
-    padding: 10px;
+  .hero-content {
+    padding: 32px 20px;
   }
 
-  .header-content {
+  .hero-title {
+    font-size: 28px;
+  }
+
+  .info-section,
+  .time-section,
+  .desc-section,
+  .rules-section {
+    padding: 20px;
+  }
+
+  .timeline-content {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
-  }
-
-  .competition-title {
-    font-size: 20px;
-  }
-
-  .info-grid {
-    grid-template-columns: 1fr;
+    gap: 4px;
   }
 }
 </style>

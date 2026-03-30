@@ -35,6 +35,9 @@ public class Work {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedAt;
 
+    @TableField(exist = false)
+    private String competitionName;
+
     @TableLogic
     private Integer deleted;
 }

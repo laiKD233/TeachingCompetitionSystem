@@ -1,6 +1,0 @@
-target/
-*.class
-*.jar
-*.log
-.idea/
-application-local.yml

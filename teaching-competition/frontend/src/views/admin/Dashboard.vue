@@ -244,74 +244,127 @@ const formatDate = (date) => {
 }
 
 .welcome-section {
-  margin-bottom: 30px;
+  margin-bottom: 32px;
+  background: linear-gradient(135deg, var(--slate-800), var(--primary-700));
+  padding: 36px 32px;
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: pulse 6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0.1; }
 }
 
 .welcome-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-white);
   margin-bottom: 8px;
+  letter-spacing: -0.5px;
+  position: relative;
+  z-index: 1;
 }
 
 .welcome-desc {
-  font-size: 14px;
-  color: var(--text-secondary);
+  font-size: 16px;
+  color: rgba(255,255,255,0.8);
   margin: 0;
+  position: relative;
+  z-index: 1;
+  font-weight: 500;
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 24px;
-  margin-bottom: 30px;
+  margin-bottom: 32px;
 }
 
 .stat-card {
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 24px;
-  border-radius: var(--radius-lg);
-  background: #fff;
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s ease;
+  padding: 28px 24px;
+  border-radius: var(--radius-xl);
+  background: var(--bg-white);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+  border: 1px solid var(--border-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-500), var(--secondary-500));
+  opacity: 0;
+  transition: opacity var(--transition-normal);
 }
 
 .stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
 }
 
 .stat-icon {
   width: 64px;
   height: 64px;
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: #fff;
+  color: var(--text-white);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-fast);
+}
+
+.stat-card:hover .stat-icon {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .competitions-icon {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
 }
 
 .users-icon {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  background: linear-gradient(135deg, var(--warning-500) 0%, var(--warning-600) 100%);
 }
 
 .registrations-icon {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, var(--secondary-500) 0%, var(--secondary-600) 100%);
 }
 
 .reviews-icon {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 100%);
 }
 
 .works-icon {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  background: linear-gradient(135deg, var(--error-500) 0%, var(--error-600) 100%);
 }
 
 .stat-content {
@@ -322,103 +375,134 @@ const formatDate = (date) => {
   font-size: 14px;
   color: var(--text-secondary);
   margin-bottom: 8px;
+  font-weight: 600;
 }
 
 .stat-value {
-  font-size: 32px;
-  font-weight: 700;
+  font-size: 36px;
+  font-weight: 800;
   color: var(--text-primary);
   margin-bottom: 4px;
+  letter-spacing: -1px;
 }
 
 .stat-desc {
   font-size: 13px;
-  color: var(--text-placeholder);
+  color: var(--text-tertiary);
   margin: 0;
+  font-weight: 500;
 }
 
 .section-card {
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   margin-bottom: 24px;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.section-card:hover {
+  box-shadow: var(--shadow-lg);
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 20px 24px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .card-header h3 {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
   margin: 0;
 }
 
 .section-card :deep(.el-table th) {
-  background-color: var(--bg-light);
-  font-weight: 600;
-  color: var(--text-primary);
+  background-color: var(--bg-secondary) !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.section-card :deep(.el-table td) {
+  border-bottom: 1px solid var(--border-light);
 }
 
 .quick-actions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  padding: 4px;
 }
 
 .quick-action-item {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 20px;
-  border-radius: var(--radius-md);
-  background: var(--bg-light);
+  gap: 18px;
+  padding: 24px;
+  border-radius: var(--radius-xl);
+  background: var(--bg-secondary);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-normal);
+  border: 1px solid var(--border-light);
 }
 
 .quick-action-item:hover {
-  background: var(--primary-gradient);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: transparent;
 }
 
 .quick-action-item:hover .action-icon {
-  color: #fff;
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: var(--text-white);
+  transform: scale(1.1);
 }
 
 .quick-action-item:hover .action-title,
 .quick-action-item:hover .action-desc {
-  color: #fff;
+  color: var(--text-white);
 }
 
 .action-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
+  background: var(--bg-white);
   color: var(--text-primary);
-  transition: all 0.3s ease;
+  transition: all var(--transition-normal);
+  flex-shrink: 0;
+  font-size: 24px;
+  box-shadow: var(--shadow-sm);
 }
 
 .competition-action {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
+  color: var(--text-white);
 }
 
 .registration-action {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, var(--secondary-500) 0%, var(--secondary-600) 100%);
+  color: var(--text-white);
 }
 
 .review-action {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 100%);
+  color: var(--text-white);
 }
 
 .result-action {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  background: linear-gradient(135deg, var(--warning-500) 0%, var(--warning-600) 100%);
+  color: var(--text-white);
 }
 
 .action-text {
@@ -426,16 +510,17 @@ const formatDate = (date) => {
 }
 
 .action-title {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .action-desc {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-secondary);
   margin: 0;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
@@ -449,6 +534,10 @@ const formatDate = (date) => {
 
   .welcome-title {
     font-size: 24px;
+  }
+  
+  .welcome-section {
+    padding: 24px 20px;
   }
 }
 </style>

@@ -1,32 +1,40 @@
 <template>
   <div class="awards-page">
     <!-- 页面标题 -->
-    <div class="page-header">
-      <h1 class="page-title">往届成果</h1>
-      <p class="page-desc">查看历届竞赛的获奖信息与优秀作品</p>
+    <div class="page-header-wrapper">
+      <div class="header-decoration">
+        <div class="deco-circle deco-circle-1"></div>
+        <div class="deco-circle deco-circle-2"></div>
+      </div>
+      <div class="page-header">
+        <div class="header-content">
+          <h1 class="page-title">往届成果</h1>
+          <p class="page-desc">查看历届竞赛的获奖信息与优秀作品</p>
+        </div>
+      </div>
     </div>
 
     <!-- 筛选 -->
-    <el-card class="filter-card">
-      <el-form :inline="true" class="filter-form">
-        <el-form-item label="竞赛">
-          <el-select
-            v-model="selectedCompetition"
-            placeholder="选择竞赛"
-            clearable
-            style="width: 240px"
-            @change="handleCompetitionChange"
-          >
-            <el-option
-              v-for="item in competitionList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-      </el-form>
-    </el-card>
+    <div class="filter-card">
+      <div class="filter-inner">
+        <el-icon class="filter-icon"><Trophy /></el-icon>
+        <span class="filter-label">选择竞赛</span>
+        <el-select
+          v-model="selectedCompetition"
+          placeholder="选择竞赛"
+          clearable
+          style="width: 320px"
+          @change="handleCompetitionChange"
+        >
+          <el-option
+            v-for="item in competitionList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
+      </div>
+    </div>
 
     <!-- 获奖信息 -->
     <div v-loading="loading" class="awards-content">
@@ -177,28 +185,88 @@ const getLevelText = (level) => {
 <style scoped>
 .awards-page {
   padding: 0;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.page-header-wrapper {
+  position: relative;
+  padding: 32px 32px 24px;
+  margin-bottom: 24px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e293b 100%);
+  overflow: hidden;
+}
+
+.header-decoration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.12;
+}
+
+.deco-circle-1 {
+  width: 180px;
+  height: 180px;
+  background: #f59e0b;
+  top: -60px;
+  right: -40px;
+}
+
+.deco-circle-2 {
+  width: 100px;
+  height: 100px;
+  background: #43e97b;
+  bottom: -30px;
+  left: 15%;
 }
 
 .page-header {
-  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
 }
 
 .page-title {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 8px 0;
+  color: #ffffff;
+  margin: 0 0 4px;
 }
 
 .page-desc {
-  font-size: 14px;
-  color: var(--text-secondary);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
   margin: 0;
 }
 
 .filter-card {
   margin-bottom: 24px;
   border-radius: var(--radius-lg);
+  background: var(--bg-white);
+  box-shadow: var(--shadow-sm);
+}
+
+.filter-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+}
+
+.filter-icon {
+  font-size: 20px;
+  color: var(--warning-color);
+}
+
+.filter-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .awards-content {

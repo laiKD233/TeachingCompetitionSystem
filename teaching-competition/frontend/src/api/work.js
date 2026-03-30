@@ -18,6 +18,7 @@ export function uploadWork(data) {
     url: '/work',
     method: 'post',
     data,
+    timeout: 120000,
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -37,6 +38,7 @@ export function updateWork(id, data) {
     url: `/work/${id}`,
     method: 'put',
     data,
+    timeout: 120000,
     headers: {
       'Content-Type': 'multipart/form-data'
     }

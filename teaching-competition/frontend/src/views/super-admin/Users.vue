@@ -1,12 +1,21 @@
 <template>
   <div class="users-page">
     <!-- 页面标题 -->
-    <div class="page-header">
-      <h1 class="page-title">用户管理</h1>
-      <el-button type="primary" @click="handleAdd">
-        <el-icon><Plus /></el-icon>
-        <span>添加用户</span>
-      </el-button>
+    <div class="page-header-wrapper">
+      <div class="header-decoration">
+        <div class="deco-circle deco-circle-1"></div>
+        <div class="deco-circle deco-circle-2"></div>
+      </div>
+      <div class="page-header">
+        <div class="header-content">
+          <h1 class="page-title">用户管理</h1>
+          <p class="page-subtitle">管理系统用户账号与权限</p>
+        </div>
+        <el-button type="primary" size="large" class="action-btn" @click="handleAdd">
+          <el-icon style="margin-right: 6px"><Plus /></el-icon>
+          添加用户
+        </el-button>
+      </div>
     </div>
     
     <!-- 搜索和筛选 -->
@@ -504,18 +513,78 @@ const handlePageChange = (page) => {
 }
 
 /* 页面头部 */
+.page-header-wrapper {
+  position: relative;
+  padding: 32px 32px 24px;
+  margin-bottom: 24px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e293b 100%);
+  overflow: hidden;
+}
+
+.header-decoration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.12;
+}
+
+.deco-circle-1 {
+  width: 160px;
+  height: 160px;
+  background: #fa709a;
+  top: -50px;
+  right: -30px;
+}
+
+.deco-circle-2 {
+  width: 100px;
+  height: 100px;
+  background: #667eea;
+  bottom: -20px;
+  left: 15%;
+}
+
 .page-header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  z-index: 1;
 }
 
 .page-title {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #ffffff;
+  margin: 0 0 4px;
+}
+
+.page-subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
   margin: 0;
+}
+
+.action-btn {
+  flex-shrink: 0;
+  padding: 10px 24px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  background: var(--primary-gradient) !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.55) !important;
 }
 
 /* 筛选卡片 */

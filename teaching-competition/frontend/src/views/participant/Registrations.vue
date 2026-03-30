@@ -1,12 +1,21 @@
 <template>
   <div class="registrations-page">
-    <!-- 页面标题 -->
-    <div class="page-header">
-      <h1 class="page-title">我的报名</h1>
-      <el-button type="primary" @click="router.push('/guest/competitions')">
-        <el-icon><Plus /></el-icon>
-        <span>报名竞赛</span>
-      </el-button>
+    <!-- 页面头部 -->
+    <div class="page-header-wrapper">
+      <div class="header-decoration">
+        <div class="deco-circle deco-circle-1"></div>
+        <div class="deco-circle deco-circle-2"></div>
+      </div>
+      <div class="page-header">
+        <div class="header-content">
+          <h1 class="page-title">我的报名</h1>
+          <p class="page-subtitle">查看和管理您的竞赛报名记录</p>
+        </div>
+        <el-button type="primary" size="large" class="action-btn" @click="router.push('/guest/competitions')">
+          <el-icon style="margin-right: 6px"><Plus /></el-icon>
+          报名竞赛
+        </el-button>
+      </div>
     </div>
 
     <!-- 报名列表 -->
@@ -35,23 +44,24 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="status" label="状态" width="120">
           <template #default="scope">
-            <el-tag :type="getStatusType(scope.row.status)" effect="plain">
+            <span class="status-pill" :class="`pill-${scope.row.status?.toLowerCase()}`">
+              <span class="pill-dot"></span>
               {{ getStatusText(scope.row.status) }}
-            </el-tag>
+            </span>
           </template>
         </el-table-column>
 
         <el-table-column prop="createdAt" label="报名时间" width="180">
           <template #default="scope">
-            <span>{{ formatDate(scope.row.createdAt) }}</span>
+            <span class="time-text">{{ formatDate(scope.row.createdAt) }}</span>
           </template>
         </el-table-column>
 
         <el-table-column prop="rejectReason" label="备注" min-width="150">
           <template #default="scope">
-            <span>{{ scope.row.rejectReason || '-' }}</span>
+            <span class="muted-text">{{ scope.row.rejectReason || '-' }}</span>
           </template>
         </el-table-column>
 
@@ -62,12 +72,13 @@
               type="primary"
               link
               size="small"
+              class="action-link"
               @click="router.push('/participant/works')"
             >
               提交作品
             </el-button>
-            <span v-else-if="scope.row.status === 'PENDING'" class="text-muted">等待审核</span>
-            <span v-else class="text-muted">已驳回</span>
+            <span v-else-if="scope.row.status === 'PENDING'" class="muted-text">等待审核</span>
+            <span v-else class="muted-text">已驳回</span>
           </template>
         </el-table-column>
       </el-table>
@@ -82,6 +93,7 @@
           layout="total, sizes, prev, pager, next"
           @size-change="handleSizeChange"
           @current-change="handlePageChange"
+          background
         />
       </div>
     </el-card>
@@ -126,15 +138,6 @@ const fetchRegistrations = async () => {
   }
 }
 
-const getStatusType = (status) => {
-  const typeMap = {
-    'PENDING': 'warning',
-    'APPROVED': 'success',
-    'REJECTED': 'danger'
-  }
-  return typeMap[status] || 'info'
-}
-
 const getStatusText = (status) => {
   const textMap = {
     'PENDING': '待审核',
@@ -164,68 +167,180 @@ const handlePageChange = (page) => {
 <style scoped>
 .registrations-page {
   padding: 0;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* 页面头部 */
+.page-header-wrapper {
+  position: relative;
+  padding: 32px 32px 24px;
   margin-bottom: 24px;
-}
-
-.page-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.table-card {
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e293b 100%);
   overflow: hidden;
 }
 
-.table-card :deep(.el-table) {
+.header-decoration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.12;
+}
+
+.deco-circle-1 {
+  width: 160px;
+  height: 160px;
+  background: var(--primary-color);
+  top: -50px;
+  right: -30px;
+}
+
+.deco-circle-2 {
+  width: 100px;
+  height: 100px;
+  background: #4facfe;
+  bottom: -20px;
+  left: 15%;
+}
+
+.page-header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.page-subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+}
+
+.action-btn {
+  flex-shrink: 0;
+  padding: 10px 24px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  background: var(--primary-gradient) !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.55) !important;
+}
+
+/* 表格卡片 */
+.table-card {
   border-radius: var(--radius-lg);
+  overflow: hidden;
 }
 
 .table-card :deep(.el-table th) {
   background-color: var(--bg-light);
   font-weight: 600;
   color: var(--text-primary);
+  font-size: 13px;
 }
 
 .competition-link {
-  color: var(--el-color-primary);
+  color: var(--primary-color);
   cursor: pointer;
+  font-weight: 500;
+  transition: color 0.2s;
 }
 
 .competition-link:hover {
+  color: #764ba2;
   text-decoration: underline;
 }
 
-.text-muted {
+.muted-text {
   font-size: 13px;
   color: var(--text-placeholder);
 }
 
+.time-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* 状态胶囊 */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.pill-pending {
+  background: rgba(230, 162, 60, 0.12);
+  color: #d48806;
+}
+.pill-pending .pill-dot { background: #e6a23c; }
+
+.pill-approved {
+  background: rgba(103, 194, 58, 0.12);
+  color: #389e0d;
+}
+.pill-approved .pill-dot { background: #67c23a; }
+
+.pill-rejected {
+  background: rgba(245, 108, 108, 0.12);
+  color: #cf1322;
+}
+.pill-rejected .pill-dot { background: #f56c6c; }
+
+.action-link {
+  font-weight: 500;
+}
+
+/* 分页 */
 .pagination-section {
   display: flex;
   justify-content: center;
-  padding: 20px 0;
-  margin-top: 20px;
-  border-top: 1px solid var(--border-light);
+  padding: 24px 0 8px;
 }
 
+/* 响应式设计 */
 @media (max-width: 768px) {
+  .page-header-wrapper {
+    padding: 24px 20px 20px;
+  }
+
   .page-header {
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
     gap: 16px;
   }
 
   .page-title {
-    font-size: 24px;
+    font-size: 22px;
   }
 }
 </style>
