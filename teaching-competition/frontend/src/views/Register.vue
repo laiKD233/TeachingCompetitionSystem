@@ -208,14 +208,55 @@ const registerForm = reactive({
   email: ''
 })
 
+const validatePassword = (_rule, value, callback) => {
+  if (!value) {
+    callback(new Error('请输入密码'))
+    return
+  }
+  if (value.length < 6) {
+    callback(new Error('密码长度不能少于 6 位'))
+    return
+  }
+  callback()
+}
+
+const validatePhone = (_rule, value, callback) => {
+  if (!value) {
+    callback(new Error('请输入电话'))
+    return
+  }
+  const phoneReg = /^1[3-9]\d{9}$/
+  if (!phoneReg.test(value)) {
+    callback(new Error('请输入正确的手机号'))
+    return
+  }
+  callback()
+}
+
+const validateEmail = (_rule, value, callback) => {
+  if (!value) {
+    callback(new Error('请输入邮箱'))
+    return
+  }
+  const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailReg.test(value)) {
+    callback(new Error('请输入正确的邮箱地址'))
+    return
+  }
+  callback()
+}
+
 const rules = {
   name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+  username: [
+    { required: true, message: '请输入用户名', trigger: 'blur' },
+    { min: 3, max: 20, message: '用户名长度为 3-20 位', trigger: 'blur' }
+  ],
+  password: [{ validator: validatePassword, trigger: 'blur' }],
   studentId: [{ required: true, message: '请输入学号', trigger: 'blur' }],
   college: [{ required: true, message: '请输入学院', trigger: 'blur' }],
-  phone: [{ required: true, message: '请输入电话', trigger: 'blur' }],
-  email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }]
+  phone: [{ validator: validatePhone, trigger: 'blur' }],
+  email: [{ validator: validateEmail, trigger: 'blur' }]
 }
 
 const handleRegister = async () => {
@@ -621,7 +662,7 @@ const handleRegister = async () => {
 .custom-input :deep(.el-input__wrapper) {
   border-radius: 12px;
   padding: 4px 16px;
-  background: var(--glass);
+  background: var(--glass) !important;
   backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
   box-shadow: none;
@@ -643,6 +684,17 @@ const handleRegister = async () => {
   color: var(--text-1);
   font-size: 14px;
   font-family: inherit;
+  background: transparent !important;
+}
+
+/* 强制覆盖浏览器自动填充的样式 */
+.custom-input :deep(.el-input__inner:-webkit-autofill),
+.custom-input :deep(.el-input__inner:-webkit-autofill:hover),
+.custom-input :deep(.el-input__inner:-webkit-autofill:focus) {
+  -webkit-text-fill-color: var(--text-1) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--glass) inset !important;
+  box-shadow: 0 0 0px 1000px var(--glass) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .custom-input :deep(.el-input__inner::placeholder) {

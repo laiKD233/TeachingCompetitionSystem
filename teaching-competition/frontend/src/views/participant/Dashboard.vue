@@ -35,9 +35,9 @@
           <el-icon :size="32"><Clock /></el-icon>
         </div>
         <div class="stat-content">
-          <p class="stat-label">待审核</p>
+          <p class="stat-label">待审核报名</p>
           <p class="stat-value">{{ stats.pendingReviews }}</p>
-          <p class="stat-desc">审核中</p>
+          <p class="stat-desc">等待审核</p>
         </div>
       </div>
       

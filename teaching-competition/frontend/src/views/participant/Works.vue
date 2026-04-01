@@ -514,7 +514,7 @@ const handlePageChange = (page) => {
 .deco-circle-2 {
   width: 120px;
   height: 120px;
-  background: #f093fb;
+  background: #60A5FA;
   bottom: -30px;
   left: 10%;
 }
@@ -562,13 +562,13 @@ const handlePageChange = (page) => {
   font-size: 14px;
   background: var(--primary-gradient) !important;
   border: none !important;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
   transition: all 0.3s ease;
 }
 
 .upload-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.55) !important;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.55) !important;
 }
 
 /* ============================
@@ -670,7 +670,7 @@ const handlePageChange = (page) => {
 .accent-approved { background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%); }
 .accent-rejected { background: linear-gradient(90deg, #f5576c 0%, #ff6b6b 100%); }
 .accent-deleted { background: linear-gradient(90deg, #a8b8c8 0%, #c8d6e5 100%); }
-.accent-submitted { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); }
+.accent-submitted { background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-700) 100%); }
 .accent-reuploaded { background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%); }
 .accent-default { background: linear-gradient(90deg, #a8b8c8 0%, #bcc6d0 100%); }
 
@@ -705,7 +705,7 @@ const handlePageChange = (page) => {
 .icon-approved { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
 .icon-rejected { background: linear-gradient(135deg, #f5576c 0%, #ff6b6b 100%); }
 .icon-deleted { background: linear-gradient(135deg, #a8b8c8 0%, #c8d6e5 100%); }
-.icon-submitted { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.icon-submitted { background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-700) 100%); }
 .icon-reuploaded { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
 .icon-default { background: linear-gradient(135deg, #a8b8c8 0%, #bcc6d0 100%); }
 
@@ -790,10 +790,10 @@ const handlePageChange = (page) => {
 .pill-deleted .pill-dot { background: #909399; }
 
 .pill-submitted {
-  background: rgba(102, 126, 234, 0.1);
-  color: #5b6abf;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--primary-600);
 }
-.pill-submitted .pill-dot { background: #667eea; }
+.pill-submitted .pill-dot { background: var(--primary-color); }
 
 .pill-reuploaded {
   background: rgba(79, 172, 254, 0.1);
@@ -840,11 +840,11 @@ const handlePageChange = (page) => {
 }
 
 .action-btn-download {
-  background: rgba(102, 126, 234, 0.08) !important;
-  color: #5b6abf !important;
+  background: rgba(37, 99, 235, 0.08) !important;
+  color: var(--primary-600) !important;
 }
 .action-btn-download:hover {
-  background: rgba(102, 126, 234, 0.16) !important;
+  background: rgba(37, 99, 235, 0.16) !important;
   transform: translateY(-1px);
 }
 
@@ -895,7 +895,7 @@ const handlePageChange = (page) => {
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08));
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.04));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -927,13 +927,13 @@ const handlePageChange = (page) => {
   font-weight: 600;
   background: var(--primary-gradient) !important;
   border: none !important;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
   transition: all 0.3s ease;
 }
 
 .empty-action:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45) !important;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45) !important;
 }
 
 /* ============================
@@ -984,7 +984,7 @@ const handlePageChange = (page) => {
 
 .upload-zone.is-active {
   border-color: var(--primary-color);
-  background: rgba(102, 126, 234, 0.03);
+  background: rgba(37, 99, 235, 0.03);
 }
 
 .upload-zone:hover {
@@ -1053,12 +1053,12 @@ const handlePageChange = (page) => {
   font-weight: 600;
   background: var(--primary-gradient) !important;
   border: none !important;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
   transition: all 0.3s ease;
 }
 
 .btn-submit:hover {
-  box-shadow: 0 6px 18px rgba(102, 126, 234, 0.45) !important;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45) !important;
   transform: translateY(-1px);
 }
 

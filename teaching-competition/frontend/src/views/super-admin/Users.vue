@@ -537,7 +537,7 @@ const handlePageChange = (page) => {
 .deco-circle-1 {
   width: 160px;
   height: 160px;
-  background: #fa709a;
+  background: var(--primary-color);
   top: -50px;
   right: -30px;
 }
@@ -545,7 +545,7 @@ const handlePageChange = (page) => {
 .deco-circle-2 {
   width: 100px;
   height: 100px;
-  background: #667eea;
+  background: #60A5FA;
   bottom: -20px;
   left: 15%;
 }
@@ -578,13 +578,13 @@ const handlePageChange = (page) => {
   font-weight: 600;
   background: var(--primary-gradient) !important;
   border: none !important;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
   transition: all 0.3s ease;
 }
 
 .action-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.55) !important;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.55) !important;
 }
 
 /* 筛选卡片 */

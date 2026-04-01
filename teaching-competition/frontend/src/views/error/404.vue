@@ -59,8 +59,8 @@ const goHome = () => {
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 30% 40%, rgba(102, 126, 234, 0.06) 0%, transparent 50%),
-    radial-gradient(circle at 70% 60%, rgba(79, 172, 254, 0.06) 0%, transparent 50%);
+    radial-gradient(circle at 30% 40%, rgba(37, 99, 235, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(96, 165, 250, 0.06) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -118,7 +118,7 @@ const goHome = () => {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  border: 3px solid rgba(102, 126, 234, 0.2);
+  border: 3px solid rgba(37, 99, 235, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -126,14 +126,14 @@ const goHome = () => {
 }
 
 @keyframes pulse-ring {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.15); }
-  50% { box-shadow: 0 0 0 16px rgba(102, 126, 234, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.15); }
+  50% { box-shadow: 0 0 0 16px rgba(37, 99, 235, 0); }
 }
 
 .error-number {
   font-size: 56px;
   font-weight: 800;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--primary-400), var(--primary-700));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -147,11 +147,11 @@ const goHome = () => {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: rgba(102, 126, 234, 0.15);
+  background: rgba(37, 99, 235, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #667eea;
+  color: var(--primary-color);
 }
 
 .error-subtitle {
@@ -180,13 +180,13 @@ const goHome = () => {
   font-weight: 600;
   background: var(--primary-gradient) !important;
   border: none !important;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
   transition: all 0.3s ease;
 }
 
 .action-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5) !important;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5) !important;
 }
 
 .action-default {

@@ -43,7 +43,17 @@ request.interceptors.response.use(
     return res
   },
   error => {
-    ElMessage.error(error.message || '网络错误')
+    const status = error.response?.status
+    if (status === 401) {
+      localStorage.removeItem('token')
+      localStorage.removeItem('userInfo')
+      router.push('/login')
+      ElMessage.error('登录已过期，请重新登录')
+    } else if (status === 403) {
+      ElMessage.error('没有权限访问该资源')
+    } else {
+      ElMessage.error(error.response?.data?.message || error.message || '网络错误')
+    }
     return Promise.reject(error)
   }
 )

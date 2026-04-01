@@ -256,19 +256,47 @@ const fetchDashboardData = async () => {
 /* 欢迎区域 */
 .welcome-section {
   margin-bottom: 30px;
+  background: linear-gradient(135deg, var(--slate-800), var(--primary-700));
+  padding: 36px 32px;
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: pulse 6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0.1; }
 }
 
 .welcome-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-white);
   margin-bottom: 8px;
+  letter-spacing: -0.5px;
+  position: relative;
+  z-index: 1;
 }
 
 .welcome-desc {
-  font-size: 14px;
-  color: var(--text-secondary);
+  font-size: 16px;
+  color: rgba(255,255,255,0.8);
   margin: 0;
+  position: relative;
+  z-index: 1;
+  font-weight: 500;
 }
 
 /* 统计卡片网格 */
@@ -283,43 +311,68 @@ const fetchDashboardData = async () => {
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 24px;
-  border-radius: var(--radius-lg);
-  background: #fff;
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s ease;
+  padding: 28px 24px;
+  border-radius: var(--radius-xl);
+  background: var(--bg-white);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+  border: 1px solid var(--border-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-500), var(--primary-700));
+  opacity: 0;
+  transition: opacity var(--transition-normal);
 }
 
 .stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+}
+
+.stat-card:hover::before {
+  opacity: 1;
 }
 
 .stat-icon {
   width: 64px;
   height: 64px;
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   color: #fff;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-fast);
+}
+
+.stat-card:hover .stat-icon {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .users-icon {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
 }
 
 .competitions-icon {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
 }
 
 .registrations-icon {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
 }
 
 .works-icon {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
 }
 
 .stat-content {
@@ -504,19 +557,19 @@ const fetchDashboardData = async () => {
 }
 
 .user-action {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
 }
 
 .log-action {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
 }
 
 .add-action {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
 }
 
 .settings-action {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
 }
 
 .quick-action-item span {

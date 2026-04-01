@@ -8,6 +8,7 @@ import com.teaching.competition.service.AwardService;
 import com.teaching.competition.vo.ScoreVO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +56,13 @@ public class AwardController {
             return Result.error("用户不存在");
         }
         List<ScoreVO> results = awardService.getAwardResults(competitionId, user.getId());
+        return Result.success(results);
+    }
+
+    @GetMapping("/public/results/{competitionId}")
+    @PreAuthorize("permitAll()")
+    public Result<List<ScoreVO>> getPublicResults(@PathVariable Long competitionId) {
+        List<ScoreVO> results = awardService.getAwardResults(competitionId, null);
         return Result.success(results);
     }
 

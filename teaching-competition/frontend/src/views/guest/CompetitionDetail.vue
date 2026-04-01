@@ -96,10 +96,68 @@
 
       <!-- 报名按钮 -->
       <div class="action-section" v-if="competition.status === 'REGISTRATION'">
-        <el-button type="primary" size="large" @click="showRegisterDialog = true" class="cta-button">
-          <el-icon><Edit /></el-icon>
-          立即报名
-        </el-button>
+        <template v-if="isRegistrationExpired">
+          <el-button type="info" size="large" disabled class="cta-button">
+            报名已截止
+          </el-button>
+          <p class="expired-tip">报名时间已过，无法报名</p>
+        </template>
+        <template v-else>
+          <el-button type="primary" size="large" @click="showRegisterDialog = true" class="cta-button">
+            <el-icon><Edit /></el-icon>
+            立即报名
+          </el-button>
+        </template>
+      </div>
+
+      <!-- 获奖公示信息（公示中或已结束时显示） -->
+      <div v-if="competition.status === 'ANNOUNCED' || competition.status === 'ENDED'" class="results-section">
+        <h3 class="section-title">
+          <el-icon><Trophy /></el-icon>
+          获奖公示
+        </h3>
+        <div v-if="resultsLoading" v-loading="true" style="min-height: 100px;"></div>
+        <template v-else-if="awardResults.length > 0">
+          <div class="winner-list">
+            <div v-for="item in awardResults" :key="item.workId" class="winner-card">
+              <div class="winner-rank" :class="'rank-' + item.rank">{{ item.rank }}</div>
+              <div class="winner-info">
+                <div class="winner-name">{{ item.participantName || '-' }}</div>
+                <div class="winner-work">{{ item.workTitle || '-' }}</div>
+              </div>
+              <div class="winner-award">
+                <el-tag :type="getLevelType(item.awardLevel)" effect="dark" size="small">
+                  {{ item.awardLevel }}
+                </el-tag>
+                <span class="winner-score">{{ item.avgScore != null ? item.avgScore + '分' : '-' }}</span>
+              </div>
+            </div>
+          </div>
+          <el-card v-if="allResults.length > 0" class="full-results-card">
+            <template #header>
+              <h3>完整成绩排名</h3>
+            </template>
+            <el-table :data="allResults" stripe size="small">
+              <el-table-column prop="rank" label="排名" width="60" />
+              <el-table-column prop="participantName" label="参赛者" width="100" />
+              <el-table-column prop="workTitle" label="作品名称" min-width="160" />
+              <el-table-column prop="avgScore" label="得分" width="80">
+                <template #default="scope">
+                  <span>{{ scope.row.avgScore != null ? scope.row.avgScore : '-' }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="awardLevel" label="奖项" width="100">
+                <template #default="scope">
+                  <el-tag v-if="scope.row.awardLevel" :type="getLevelType(scope.row.awardLevel)" effect="plain" size="small">
+                    {{ scope.row.awardLevel }}
+                  </el-tag>
+                  <span v-else>-</span>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-card>
+        </template>
+        <el-empty v-else description="暂无获奖信息" />
       </div>
     </div>
 
@@ -146,11 +204,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getCompetition } from '@/api/competition'
 import { createRegistration } from '@/api/registration'
+import { getPublicResults } from '@/api/award'
 
 const route = useRoute()
 const router = useRouter()
@@ -158,6 +217,21 @@ const loading = ref(false)
 const submitting = ref(false)
 const competition = ref(null)
 const showRegisterDialog = ref(false)
+const resultsLoading = ref(false)
+const allResults = ref([])
+
+// 判断报名是否已截止
+const isRegistrationExpired = computed(() => {
+  if (!competition.value) return false
+  const end = competition.value.registrationEnd
+  if (!end) return false
+  return new Date(end) < new Date()
+})
+
+// 有奖项的结果（用于卡片展示）
+const awardResults = computed(() => {
+  return allResults.value.filter(item => item.awardLevel)
+})
 
 const registerForm = ref({
   projectName: '',
@@ -181,11 +255,32 @@ const fetchCompetition = async () => {
   try {
     const res = await getCompetition(route.params.id)
     competition.value = res.data
+    // 如果竞赛已公示或已结束，加载获奖信息
+    if (competition.value && (competition.value.status === 'ANNOUNCED' || competition.value.status === 'ENDED')) {
+      fetchResults()
+    }
   } catch (error) {
     ElMessage.error('获取竞赛详情失败')
     console.error(error)
   } finally {
     loading.value = false
+  }
+}
+
+const fetchResults = async () => {
+  resultsLoading.value = true
+  try {
+    const res = await getPublicResults(route.params.id)
+    const data = res.data || []
+    allResults.value = data.map((item, index) => ({
+      ...item,
+      rank: index + 1
+    }))
+  } catch (error) {
+    console.error('获取竞赛结果失败', error)
+    allResults.value = []
+  } finally {
+    resultsLoading.value = false
   }
 }
 
@@ -224,10 +319,11 @@ const getStatusText = (status) => {
     const textMap = {
         'DRAFT': '草稿',
         'PUBLISHED': '已发布',
-        'REGISTRATION': '已报名',
+        'REGISTRATION': '报名中',
         'ONGOING': '进行中',
         'REVIEWED': '已评审',
         'ANNOUNCEMENT': '公示中',
+        'ANNOUNCED': '公示中',
         'ENDED': '已结束'
     }
     return textMap[status] || status
@@ -241,6 +337,17 @@ const formatDate = (date) => {
     month: 'long',
     day: 'numeric'
   })
+}
+
+const getLevelType = (level) => {
+  const typeMap = {
+    '特等奖': 'danger',
+    '一等奖': 'warning',
+    '二等奖': 'primary',
+    '三等奖': 'success',
+    '优秀奖': 'info'
+  }
+  return typeMap[level] || 'info'
 }
 </script>
 
@@ -514,6 +621,111 @@ const formatDate = (date) => {
 
 .cta-button:active {
   transform: translateY(0) scale(0.98);
+}
+
+.expired-tip {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+/* 获奖公示 */
+.results-section {
+  background: var(--bg-white);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+}
+
+.winner-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.winner-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-normal);
+}
+
+.winner-card:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-sm);
+}
+
+.winner-rank {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  flex-shrink: 0;
+  color: #fff;
+}
+
+.rank-1 { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.rank-2 { background: linear-gradient(135deg, #9ca3af, #6b7280); }
+.rank-3 { background: linear-gradient(135deg, #b45309, #92400e); }
+
+.winner-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.winner-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.winner-work {
+  font-size: 13px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.winner-award {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.winner-score {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+}
+
+.full-results-card {
+  border-radius: var(--radius-lg);
+}
+
+.full-results-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.full-results-card :deep(.el-table th) {
+  background-color: var(--bg-light);
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 @media (max-width: 768px) {

@@ -563,7 +563,7 @@ const handleLogin = async () => {
 .custom-input :deep(.el-input__wrapper) {
   border-radius: 12px;
   padding: 4px 16px;
-  background: var(--glass);
+  background: var(--glass) !important;
   backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
   box-shadow: none;
@@ -585,6 +585,17 @@ const handleLogin = async () => {
   color: var(--text-1);
   font-size: 15px;
   font-family: inherit;
+  background: transparent !important;
+}
+
+/* 强制覆盖浏览器自动填充的样式 */
+.custom-input :deep(.el-input__inner:-webkit-autofill),
+.custom-input :deep(.el-input__inner:-webkit-autofill:hover),
+.custom-input :deep(.el-input__inner:-webkit-autofill:focus) {
+  -webkit-text-fill-color: var(--text-1) !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--glass) inset !important;
+  box-shadow: 0 0 0px 1000px var(--glass) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .custom-input :deep(.el-input__inner::placeholder) {

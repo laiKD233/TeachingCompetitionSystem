@@ -60,7 +60,7 @@ const goHome = () => {
   inset: 0;
   background-image:
     radial-gradient(circle at 30% 40%, rgba(245, 108, 108, 0.06) 0%, transparent 50%),
-    radial-gradient(circle at 70% 60%, rgba(102, 126, 234, 0.06) 0%, transparent 50%);
+    radial-gradient(circle at 70% 60%, rgba(37, 99, 235, 0.06) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -180,13 +180,13 @@ const goHome = () => {
   font-weight: 600;
   background: var(--primary-gradient) !important;
   border: none !important;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
   transition: all 0.3s ease;
 }
 
 .action-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5) !important;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5) !important;
 }
 
 .action-default {

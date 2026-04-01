@@ -11,4 +11,6 @@ public class ScoreVO {
     private String rank;
     private String awardLevel;
     private String reviewComment;
+    private String fileUrl;
+    private String fileName;
 }

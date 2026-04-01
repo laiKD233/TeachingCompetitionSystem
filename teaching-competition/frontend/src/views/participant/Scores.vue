@@ -54,20 +54,20 @@
             <p class="score-competition">{{ item.competitionName || '-' }}</p>
           </div>
           <div class="score-data">
-            <div class="score-points" v-if="item.score">
-              <span class="points-value">{{ item.score }}</span>
+            <div class="score-points" v-if="item.avgScore !== null && item.avgScore !== undefined">
+              <span class="points-value">{{ Number(item.avgScore).toFixed(1) }}</span>
               <span class="points-label">分</span>
             </div>
             <div class="score-points" v-else>
               <span class="points-na">未评分</span>
             </div>
-            <el-tag v-if="item.award" :type="getAwardType(item.award)" effect="plain" size="small" class="award-tag">
-              {{ item.award }}
+            <el-tag v-if="item.awardLevel" :type="getAwardType(item.awardLevel)" effect="plain" size="small" class="award-tag">
+              {{ item.awardLevel }}
             </el-tag>
           </div>
-          <div class="score-comment" v-if="item.comment">
+          <div class="score-comment" v-if="item.reviewComment">
             <el-icon style="margin-right: 4px; flex-shrink: 0"><ChatLineSquare /></el-icon>
-            <span>{{ item.comment }}</span>
+            <span>{{ item.reviewComment }}</span>
           </div>
         </div>
       </div>
@@ -366,7 +366,7 @@ const getAwardType = (award) => {
   font-size: 13px;
   color: var(--text-secondary);
   padding: 8px 12px;
-  background: rgba(102, 126, 234, 0.04);
+  background: rgba(37, 99, 235, 0.04);
   border-radius: var(--radius-sm);
   flex-shrink: 0;
   max-width: 200px;

@@ -1,6 +1,7 @@
 package com.teaching.competition.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.teaching.competition.entity.ReviewTask;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.teaching.competition.common.PageResult;
@@ -11,6 +12,7 @@ import com.teaching.competition.entity.Work;
 import com.teaching.competition.exception.BusinessException;
 import com.teaching.competition.mapper.CompetitionMapper;
 import com.teaching.competition.mapper.RegistrationMapper;
+import com.teaching.competition.mapper.ReviewTaskMapper;
 import com.teaching.competition.mapper.WorkMapper;
 import com.teaching.competition.service.OssService;
 import com.teaching.competition.service.WorkService;
@@ -27,6 +29,7 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
     private final OssService ossService;
     private final RegistrationMapper registrationMapper;
     private final CompetitionMapper competitionMapper;
+    private final ReviewTaskMapper reviewTaskMapper;
 
     @Override
     @Transactional
@@ -131,6 +134,10 @@ public class WorkServiceImpl extends ServiceImpl<WorkMapper, Work> implements Wo
         }
         // 同时删除 OSS 上的文件
         ossService.delete(work.getFileUrl());
+        // 级联删除关联的评审任务
+        LambdaQueryWrapper<ReviewTask> taskWrapper = new LambdaQueryWrapper<>();
+        taskWrapper.eq(ReviewTask::getWorkId, id);
+        reviewTaskMapper.delete(taskWrapper);
         removeById(id);
     }
 

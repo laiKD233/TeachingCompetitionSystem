@@ -86,6 +86,12 @@ const routes = [
         meta: { title: '评审分配', role: ['TEACHER', 'ADMIN'] }
       },
       {
+        path: '/admin/my-reviews',
+        name: 'MyReviews',
+        component: () => import('@/views/admin/MyReviews.vue'),
+        meta: { title: '我的评审', role: ['TEACHER', 'ADMIN'] }
+      },
+      {
         path: '/admin/results',
         name: 'AdminResults',
         component: () => import('@/views/admin/Results.vue'),
@@ -108,6 +114,12 @@ const routes = [
         name: 'OperationLogs',
         component: () => import('@/views/super-admin/Logs.vue'),
         meta: { title: '操作日志', role: ['ADMIN'] }
+      },
+      {
+        path: '/profile',
+        name: 'Profile',
+        component: () => import('@/views/Profile.vue'),
+        meta: { title: '个人中心', role: ['STUDENT', 'TEACHER', 'ADMIN'] }
       }
     ]
   },
@@ -146,7 +158,6 @@ router.beforeEach((to, from, next) => {
       next()
       return
     }
-    console.log('没有token，跳转到登录页', { to, from })
     next('/login')
     return
   }
@@ -162,24 +173,21 @@ router.beforeEach((to, from, next) => {
       }
     }
   }
-  
+
   const userRole = userStore.user?.role
-  
+
   // 检查角色权限
   if (to.meta.role) {
     if (!userRole) {
-      console.log('用户角色为空，跳转到403', { to, userRole })
       next('/403')
       return
     }
     if (!to.meta.role.includes(userRole)) {
-      console.log('用户角色权限不足', { to, userRole, requiredRoles: to.meta.role })
       next('/403')
       return
     }
   }
-  
-  console.log('路由守卫通过', { to, userRole })
+
   next()
 })
 

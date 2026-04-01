@@ -180,6 +180,30 @@
           </el-col>
           
           <el-col :span="12">
+            <el-form-item label="公示开始" prop="announcementStart">
+              <el-date-picker
+                v-model="form.announcementStart"
+                type="datetime"
+                placeholder="选择公示开始时间"
+                style="width: 100%"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="公示结束" prop="announcementEnd">
+              <el-date-picker
+                v-model="form.announcementEnd"
+                type="datetime"
+                placeholder="选择公示结束时间"
+                style="width: 100%"
+              />
+            </el-form-item>
+          </el-col>
+          
+          <el-col :span="12">
             <el-form-item label="初始状态" prop="status">
               <el-select v-model="form.status" placeholder="请选择状态">
                 <el-option label="草稿" value="DRAFT" />
@@ -264,8 +288,10 @@ const form = reactive({
   submissionDeadline: '',
   reviewStart: '',
   reviewEnd: '',
+  announcementStart: '',
+  announcementEnd: '',
   status: 'DRAFT',
-  rulesText: '',
+  rules: '',
   submissionRequirements: '',
   coverImage: ''
 })
@@ -351,8 +377,10 @@ const handleEdit = (row) => {
     submissionDeadline: row.submissionDeadline || '',
     reviewStart: row.reviewStart || '',
     reviewEnd: row.reviewEnd || '',
+    announcementStart: row.announcementStart || '',
+    announcementEnd: row.announcementEnd || '',
     status: row.status || 'DRAFT',
-    rulesText: row.rules || '',
+    rules: row.rules || '',
     submissionRequirements: row.submissionRequirements || '',
     coverImage: row.coverImage || ''
   })
@@ -391,13 +419,15 @@ const buildSubmitData = (coverUrl) => {
     description: form.description,
     coverImage: coverUrl || null,
     status: form.status,
-    rules: form.rulesText,
+    rules: form.rules,
     submissionRequirements: form.submissionRequirements,
     registrationStart: formatDateTime(form.registrationStart),
     registrationEnd: formatDateTime(form.registrationEnd),
     submissionDeadline: formatDateTime(form.submissionDeadline),
     reviewStart: formatDateTime(form.reviewStart),
-    reviewEnd: formatDateTime(form.reviewEnd)
+    reviewEnd: formatDateTime(form.reviewEnd),
+    announcementStart: formatDateTime(form.announcementStart),
+    announcementEnd: formatDateTime(form.announcementEnd)
   }
 }
 
@@ -474,8 +504,10 @@ const resetForm = () => {
     submissionDeadline: '',
     reviewStart: '',
     reviewEnd: '',
+    announcementStart: '',
+    announcementEnd: '',
     status: 'DRAFT',
-    rulesText: '',
+    rules: '',
     submissionRequirements: '',
     coverImage: ''
   })
@@ -544,7 +576,7 @@ const handlePageChange = (page) => {
 .deco-circle-1 {
   width: 160px;
   height: 160px;
-  background: #667eea;
+  background: var(--primary-color);
   top: -50px;
   right: -30px;
 }
@@ -552,7 +584,7 @@ const handlePageChange = (page) => {
 .deco-circle-2 {
   width: 100px;
   height: 100px;
-  background: #f093fb;
+  background: #60A5FA;
   bottom: -20px;
   left: 15%;
 }
@@ -585,13 +617,13 @@ const handlePageChange = (page) => {
   font-weight: 600;
   background: var(--primary-gradient) !important;
   border: none !important;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
   transition: all 0.3s ease;
 }
 
 .action-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.55) !important;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.55) !important;
 }
 
 /* 表格卡片 */

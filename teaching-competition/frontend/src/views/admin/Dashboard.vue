@@ -316,7 +316,7 @@ const formatDate = (date) => {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--primary-500), var(--secondary-500));
+  background: linear-gradient(90deg, var(--primary-500), var(--primary-700));
   opacity: 0;
   transition: opacity var(--transition-normal);
 }

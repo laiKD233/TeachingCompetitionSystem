@@ -65,29 +65,31 @@
 
         <el-table-column prop="workTitle" label="作品名称" min-width="180">
           <template #default="scope">
-            <span>{{ scope.row.workTitle || scope.row.title || '-' }}</span>
+            <span>{{ scope.row.workTitle || '-' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="score" label="得分" width="100">
+        <el-table-column prop="avgScore" label="得分" width="100">
           <template #default="scope">
-            <span v-if="scope.row.score" class="score-value">{{ scope.row.score }}</span>
+            <span v-if="scope.row.avgScore !== null && scope.row.avgScore !== undefined" class="score-value">
+              {{ Number(scope.row.avgScore).toFixed(1) }}
+            </span>
             <span v-else>-</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="award" label="奖项" width="120">
+        <el-table-column prop="awardLevel" label="奖项" width="120">
           <template #default="scope">
-            <el-tag v-if="scope.row.award" :type="getAwardType(scope.row.award)" effect="plain" size="small">
-              {{ scope.row.award }}
+            <el-tag v-if="scope.row.awardLevel" :type="getAwardType(scope.row.awardLevel)" effect="plain" size="small">
+              {{ scope.row.awardLevel }}
             </el-tag>
             <span v-else>-</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="comment" label="评语" min-width="200">
+        <el-table-column prop="reviewComment" label="评语" min-width="200">
           <template #default="scope">
-            <span>{{ scope.row.comment || '-' }}</span>
+            <span>{{ scope.row.reviewComment || '-' }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -101,30 +103,24 @@
         </div>
       </template>
 
-      <el-table :data="awards" stripe>
-        <el-table-column prop="level" label="奖项等级" width="120">
+      <el-table :data="enrichedAwards" stripe>
+        <el-table-column prop="awardLevel" label="奖项等级" width="120">
           <template #default="scope">
-            <el-tag :type="getAwardType(scope.row.level)" effect="dark" size="small">
-              {{ scope.row.level || '-' }}
+            <el-tag :type="getAwardType(scope.row.awardLevel)" effect="dark" size="small">
+              {{ scope.row.awardLevel || '-' }}
             </el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column prop="title" label="获奖作品" min-width="180">
+        <el-table-column prop="workTitle" label="获奖作品" min-width="180">
           <template #default="scope">
-            <span>{{ scope.row.title || scope.row.workTitle || '-' }}</span>
+            <span>{{ scope.row.workTitle || '-' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="winnerName" label="获奖者" width="120">
+        <el-table-column prop="participantName" label="获奖者" width="120">
           <template #default="scope">
-            <span>{{ scope.row.winnerName || scope.row.participantName || '-' }}</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column prop="prize" label="奖品" width="150">
-          <template #default="scope">
-            <span>{{ scope.row.prize || '-' }}</span>
+            <span>{{ scope.row.participantName || '-' }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -136,8 +132,8 @@
     <!-- 发布奖项对话框 -->
     <el-dialog v-model="awardDialogVisible" title="发布奖项" width="500px" @close="resetAwardForm">
       <el-form :model="awardForm" :rules="awardRules" ref="awardFormRef" label-width="100px">
-        <el-form-item label="奖项等级" prop="level">
-          <el-select v-model="awardForm.level" placeholder="请选择奖项等级" style="width: 100%">
+        <el-form-item label="奖项等级" prop="awardLevel">
+          <el-select v-model="awardForm.awardLevel" placeholder="请选择奖项等级" style="width: 100%">
             <el-option label="特等奖" value="特等奖" />
             <el-option label="一等奖" value="一等奖" />
             <el-option label="二等奖" value="二等奖" />
@@ -150,24 +146,11 @@
           <el-select v-model="awardForm.workId" placeholder="请选择作品" style="width: 100%">
             <el-option
               v-for="item in results"
-              :key="item.workId || item.id"
-              :label="item.workTitle || item.title || `参赛者: ${item.participantName}`"
-              :value="item.workId || item.id"
+              :key="item.workId"
+              :label="item.workTitle || `参赛者: ${item.participantName || '未知'}`"
+              :value="item.workId"
             />
           </el-select>
-        </el-form-item>
-
-        <el-form-item label="奖品" prop="prize">
-          <el-input v-model="awardForm.prize" placeholder="请输入奖品描述" />
-        </el-form-item>
-
-        <el-form-item label="描述">
-          <el-input
-            v-model="awardForm.description"
-            type="textarea"
-            :rows="3"
-            placeholder="请输入获奖描述（可选）"
-          />
         </el-form-item>
       </el-form>
 
@@ -180,7 +163,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getAdminCompetitions } from '@/api/competition'
 import { publishAward, publishAnnouncement, getAwardList, getCompetitionResults } from '@/api/award'
@@ -194,16 +177,25 @@ const awardDialogVisible = ref(false)
 const awardFormRef = ref(null)
 
 const awardForm = reactive({
-  level: '',
-  workId: '',
-  prize: '',
-  description: ''
+  awardLevel: '',
+  workId: ''
 })
 
 const awardRules = {
-  level: [{ required: true, message: '请选择奖项等级', trigger: 'change' }],
+  awardLevel: [{ required: true, message: '请选择奖项等级', trigger: 'change' }],
   workId: [{ required: true, message: '请选择获奖作品', trigger: 'change' }]
 }
+
+const enrichedAwards = computed(() => {
+  return awards.value.map(award => {
+    const match = results.value.find(r => r.workId === award.workId)
+    return {
+      ...award,
+      workTitle: match?.workTitle || '-',
+      participantName: match?.participantName || '-'
+    }
+  })
+})
 
 onMounted(() => {
   fetchCompetitions()
@@ -257,7 +249,10 @@ const handlePublishAward = async () => {
       try {
         await publishAward({
           competitionId: selectedCompetition.value,
-          ...awardForm
+          items: [{
+            workId: awardForm.workId,
+            awardLevel: awardForm.awardLevel
+          }]
         })
         ElMessage.success('奖项发布成功')
         awardDialogVisible.value = false
@@ -290,10 +285,8 @@ const handlePublishAnnouncement = async () => {
 const resetAwardForm = () => {
   awardFormRef.value?.resetFields()
   Object.assign(awardForm, {
-    level: '',
-    workId: '',
-    prize: '',
-    description: ''
+    awardLevel: '',
+    workId: ''
   })
 }
 

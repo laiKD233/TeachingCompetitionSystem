@@ -341,7 +341,7 @@ const handlePageChange = (page) => {
 .deco-circle-1 {
   width: 160px;
   height: 160px;
-  background: #f093fb;
+  background: var(--primary-color);
   top: -50px;
   right: -30px;
 }
@@ -349,7 +349,7 @@ const handlePageChange = (page) => {
 .deco-circle-2 {
   width: 100px;
   height: 100px;
-  background: #4facfe;
+  background: #60A5FA;
   bottom: -20px;
   left: 15%;
 }

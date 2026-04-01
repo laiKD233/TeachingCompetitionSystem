@@ -72,6 +72,10 @@
                 <el-icon><ChatDotRound /></el-icon>
                 <template #title><span>评审分配</span></template>
               </el-menu-item>
+              <el-menu-item index="/admin/my-reviews">
+                <el-icon><EditPen /></el-icon>
+                <template #title><span>我的评审</span></template>
+              </el-menu-item>
               <el-menu-item index="/admin/results">
                 <el-icon><Trophy /></el-icon>
                 <template #title><span>成绩公示</span></template>
@@ -221,9 +225,11 @@ const breadcrumbs = computed(() => {
     '/admin/competitions': { title: '竞赛管理', path: '/admin/competitions' },
     '/admin/registrations': { title: '报名审核', path: '/admin/registrations' },
     '/admin/reviews': { title: '评审分配', path: '/admin/reviews' },
+    '/admin/my-reviews': { title: '我的评审', path: '/admin/my-reviews' },
     '/admin/results': { title: '成绩公示', path: '/admin/results' },
     '/super-admin/users': { title: '用户管理', path: '/super-admin/users' },
-    '/super-admin/logs': { title: '操作日志', path: '/super-admin/logs' }
+    '/super-admin/logs': { title: '操作日志', path: '/super-admin/logs' },
+    '/profile': { title: '个人中心', path: '/profile' }
   }
   if (routeMap[path]) {
     routes.push(routeMap[path])
@@ -255,10 +261,14 @@ const toggleFullscreen = () => {
 const handleCommand = (command) => {
   switch (command) {
     case 'profile':
-      ElMessage.info('个人中心功能开发中')
+      router.push('/profile')
       break
     case 'settings':
-      ElMessage.info('系统设置功能开发中')
+      if (userStore.user?.role === 'ADMIN') {
+        router.push('/super-admin/users')
+      } else {
+        ElMessage.info('系统设置仅管理员可用')
+      }
       break
     case 'logout':
       handleLogout()

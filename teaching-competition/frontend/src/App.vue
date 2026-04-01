@@ -75,6 +75,19 @@
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* 兼容性别名 (与 common.css 统一) */
+  --bg-white: #FFFFFF;
+  --bg-light: #F1F5F9;
+  --primary-color: #2563EB;
+  --primary-gradient: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+  --secondary-gradient: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
+  --border-color: #CBD5E1;
+  --text-placeholder: #94A3B8;
+  --success-color: #059669;
+  --warning-color: #D97706;
+  --danger-color: #DC2626;
+  --info-color: #64748B;
 }
 
 * {

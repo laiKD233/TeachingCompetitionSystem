@@ -61,22 +61,24 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="score" label="得分" width="100">
+        <el-table-column prop="avgScore" label="平均得分" width="120">
           <template #default="scope">
-            <span v-if="scope.row.score" class="score-value">{{ scope.row.score }}</span>
+            <span
+              v-if="scope.row.avgScore !== null && scope.row.avgScore !== undefined"
+              class="score-value"
+            >
+              {{ Number(scope.row.avgScore).toFixed(1) }}
+            </span>
             <el-tag v-else type="warning" size="small" effect="plain">待评审</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column prop="reviewerName" label="评审人" width="120">
+        <el-table-column label="操作" width="120" fixed="right">
           <template #default="scope">
-            <span>{{ scope.row.reviewerName || '-' }}</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column prop="comment" label="评语" min-width="200">
-          <template #default="scope">
-            <span>{{ scope.row.comment || '-' }}</span>
+            <el-button type="info" size="small" plain @click="showReviewDetail(scope.row)">
+              <el-icon><View /></el-icon>
+              <span>详情</span>
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -85,35 +87,80 @@
     <el-empty v-if="!selectedCompetition" description="请选择竞赛查看评审情况" />
     <el-empty v-if="selectedCompetition && scores.length === 0 && !loading" description="暂无评审数据" />
 
+    <!-- 评审详情对话框 -->
+    <el-dialog v-model="detailDialogVisible" title="评审详情" width="600px">
+      <el-descriptions :column="1" border v-if="currentDetail">
+        <el-descriptions-item label="作品名称">{{ currentDetail.workTitle }}</el-descriptions-item>
+        <el-descriptions-item label="参赛者">{{ currentDetail.participantName || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="作品文件">
+          <el-button
+            v-if="currentDetail.workFileUrl"
+            type="primary"
+            size="small"
+            text
+            @click="downloadWorkFile"
+          >
+            <el-icon><Download /></el-icon>
+            <span>{{ currentDetail.workFileName || '下载文件' }}</span>
+          </el-button>
+          <span v-else class="text-muted">无文件</span>
+        </el-descriptions-item>
+        <el-descriptions-item label="平均得分">
+          <span v-if="currentDetail.avgScore !== null && currentDetail.avgScore !== undefined" class="score-value">
+            {{ Number(currentDetail.avgScore).toFixed(1) }}
+          </span>
+          <el-tag v-else type="warning" size="small">待评审</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="评审任务数">{{ currentDetail.reviewCount || 0 }}</el-descriptions-item>
+        <el-descriptions-item label="已完成评审">{{ currentDetail.completedCount || 0 }}</el-descriptions-item>
+        <el-descriptions-item label="评审人列表">
+          <div v-if="currentDetail.reviewers && currentDetail.reviewers.length > 0">
+            <el-tag
+              v-for="r in currentDetail.reviewers"
+              :key="r.reviewerId"
+              :type="r.status === 'COMPLETED' ? 'success' : 'warning'"
+              size="small"
+              style="margin: 2px 4px 2px 0"
+            >
+              {{ r.reviewerName }} - {{ r.status === 'COMPLETED' ? (r.score + '分') : '待评审' }}
+            </el-tag>
+          </div>
+          <span v-else>暂无评审人</span>
+        </el-descriptions-item>
+        <el-descriptions-item label="评审评语" v-if="currentDetail.comments">
+          <div v-for="(c, i) in currentDetail.comments" :key="i" style="margin-bottom: 4px">
+            <span style="color: var(--text-secondary)">{{ c.reviewerName }}：</span>{{ c.comment }}
+          </div>
+        </el-descriptions-item>
+      </el-descriptions>
+      <template #footer>
+        <el-button @click="detailDialogVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
+
     <!-- 分配评审对话框 -->
     <el-dialog v-model="assignDialogVisible" title="分配评审任务" width="500px" @close="resetAssignForm">
       <el-form :model="assignForm" :rules="assignRules" ref="assignFormRef" label-width="100px">
         <el-form-item label="参赛作品" prop="workId">
           <el-select v-model="assignForm.workId" placeholder="请选择作品" style="width: 100%">
             <el-option
-              v-for="item in scores.filter(s => !s.score)"
-              :key="item.workId || item.id"
-              :label="item.workTitle || item.title"
-              :value="item.workId || item.id"
+              v-for="item in scores"
+              :key="item.workId"
+              :label="item.workTitle"
+              :value="item.workId"
             />
           </el-select>
         </el-form-item>
 
         <el-form-item label="评审人" prop="reviewerId">
-          <el-input v-model="assignForm.reviewerId" placeholder="请输入评审人ID" />
-        </el-form-item>
-
-        <el-form-item label="评分" prop="score">
-          <el-input-number v-model="assignForm.score" :min="0" :max="100" style="width: 100%" />
-        </el-form-item>
-
-        <el-form-item label="评语" prop="comment">
-          <el-input
-            v-model="assignForm.comment"
-            type="textarea"
-            :rows="3"
-            placeholder="请输入评语"
-          />
+          <el-select v-model="assignForm.reviewerId" placeholder="请选择评审人" style="width: 100%" filterable>
+            <el-option
+              v-for="reviewer in reviewerOptions"
+              :key="reviewer.id"
+              :label="`${reviewer.name} (${reviewer.studentId || reviewer.id})`"
+              :value="reviewer.id"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
 
@@ -123,77 +170,56 @@
       </template>
     </el-dialog>
 
-    <!-- 打分对话框 -->
-    <el-dialog v-model="scoreDialogVisible" title="提交评分" width="500px" @close="resetScoreForm">
-      <el-form :model="scoreForm" :rules="scoreRules" ref="scoreFormRef" label-width="80px">
-        <el-form-item label="评分" prop="score">
-          <el-input-number v-model="scoreForm.score" :min="0" :max="100" style="width: 100%" />
-        </el-form-item>
-
-        <el-form-item label="评语">
-          <el-input
-            v-model="scoreForm.comment"
-            type="textarea"
-            :rows="3"
-            placeholder="请输入评语"
-          />
-        </el-form-item>
-      </el-form>
-
-      <template #footer>
-        <el-button @click="scoreDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSubmitScore">提交评分</el-button>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
+import { Plus, View, Download } from '@element-plus/icons-vue'
 import { getAdminCompetitions } from '@/api/competition'
-import { assignReview, submitScore, getReviewScores } from '@/api/review'
+import { assignReview, getReviewScores, getWorkReviewTasks, getEligibleReviewers } from '@/api/review'
 
 const loading = ref(false)
 const selectedCompetition = ref(null)
 const competitionOptions = ref([])
 const scores = ref([])
+const reviewerOptions = ref([])
 const assignDialogVisible = ref(false)
-const scoreDialogVisible = ref(false)
+const detailDialogVisible = ref(false)
 const assignFormRef = ref(null)
-const scoreFormRef = ref(null)
+const currentDetail = ref(null)
 
 const assignForm = reactive({
   workId: '',
-  reviewerId: '',
-  score: 80,
-  comment: ''
-})
-
-const scoreForm = reactive({
-  taskId: null,
-  workId: null,
-  score: 80,
-  comment: ''
+  reviewerId: ''
 })
 
 const assignRules = {
   workId: [{ required: true, message: '请选择作品', trigger: 'change' }],
-  reviewerId: [{ required: true, message: '请输入评审人ID', trigger: 'blur' }]
-}
-
-const scoreRules = {
-  score: [{ required: true, message: '请输入评分', trigger: 'blur' }]
+  reviewerId: [{ required: true, message: '请选择评审人', trigger: 'change' }]
 }
 
 onMounted(() => {
   fetchCompetitions()
+  fetchReviewerOptions()
 })
 
 const fetchCompetitions = async () => {
   try {
     const res = await getAdminCompetitions({ page: 1, size: 100 })
     competitionOptions.value = res.data.records
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const fetchReviewerOptions = async () => {
+  try {
+    const res = await getEligibleReviewers()
+    if (res.data) {
+      reviewerOptions.value = res.data
+    }
   } catch (error) {
     console.error(error)
   }
@@ -226,6 +252,57 @@ const showAssignDialog = () => {
   assignDialogVisible.value = true
 }
 
+const showReviewDetail = async (row) => {
+  currentDetail.value = {
+    ...row,
+    reviewers: [],
+    comments: [],
+    reviewCount: 0,
+    completedCount: 0,
+    workFileUrl: row.fileUrl || '',
+    workFileName: row.fileName || ''
+  }
+  detailDialogVisible.value = true
+  try {
+    const res = await getWorkReviewTasks(row.workId)
+    if (res.data) {
+      const workTasks = res.data
+      currentDetail.value.reviewCount = workTasks.length
+      currentDetail.value.completedCount = workTasks.filter(t => t.status === 'COMPLETED').length
+
+      const reviewerIds = [...new Set(workTasks.map(t => t.reviewerId))]
+      if (reviewerIds.length > 0) {
+        const reviewerRes = await getEligibleReviewers()
+        const allUsers = reviewerRes.data || []
+        const userMap = {}
+        allUsers.forEach(u => { userMap[u.id] = u.name })
+        currentDetail.value.reviewers = workTasks.map(t => ({
+          reviewerId: t.reviewerId,
+          reviewerName: userMap[t.reviewerId] || `用户${t.reviewerId}`,
+          score: t.score,
+          status: t.status,
+          comment: t.comment
+        }))
+        const comments = workTasks.filter(t => t.comment).map(t => ({
+          reviewerName: userMap[t.reviewerId] || `用户${t.reviewerId}`,
+          comment: t.comment
+        }))
+        if (comments.length > 0) {
+          currentDetail.value.comments = comments
+        }
+      }
+    }
+  } catch (error) {
+    console.error('获取评审详情失败', error)
+  }
+}
+
+const downloadWorkFile = () => {
+  if (currentDetail.value?.workFileUrl) {
+    window.open(currentDetail.value.workFileUrl, '_blank')
+  }
+}
+
 const handleAssign = async () => {
   if (!assignFormRef.value) return
 
@@ -248,46 +325,11 @@ const handleAssign = async () => {
   })
 }
 
-const handleSubmitScore = async () => {
-  if (!scoreFormRef.value) return
-
-  await scoreFormRef.value.validate(async (valid) => {
-    if (valid) {
-      try {
-        await submitScore({
-          taskId: scoreForm.taskId,
-          workId: scoreForm.workId,
-          score: scoreForm.score,
-          comment: scoreForm.comment
-        })
-        ElMessage.success('评分提交成功')
-        scoreDialogVisible.value = false
-        fetchScores(selectedCompetition.value)
-      } catch (error) {
-        ElMessage.error('评分提交失败')
-        console.error(error)
-      }
-    }
-  })
-}
-
 const resetAssignForm = () => {
   assignFormRef.value?.resetFields()
   Object.assign(assignForm, {
     workId: '',
-    reviewerId: '',
-    score: 80,
-    comment: ''
-  })
-}
-
-const resetScoreForm = () => {
-  scoreFormRef.value?.resetFields()
-  Object.assign(scoreForm, {
-    taskId: null,
-    workId: null,
-    score: 80,
-    comment: ''
+    reviewerId: ''
   })
 }
 </script>

@@ -12,6 +12,12 @@ public class ReviewAssignDTO {
     private Integer worksPerReviewer;
     private List<ReviewItemDTO> items;
 
+    // 兼容前端“单个作品+评审人”的简化调用
+    // 如果前端直接传 { workId, reviewerId, competitionId }，
+    // 服务层会在 items 为空时基于这两个字段构造单条分配记录。
+    private Long workId;
+    private Long reviewerId;
+
     @Data
     public static class ReviewItemDTO {
         private Long workId;

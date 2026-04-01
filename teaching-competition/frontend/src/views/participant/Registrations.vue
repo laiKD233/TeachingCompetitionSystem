@@ -20,6 +20,15 @@
 
     <!-- 报名列表 -->
     <el-card class="table-card">
+      <!-- 状态筛选 -->
+      <div class="filter-section">
+        <el-radio-group v-model="statusFilter" size="default" @change="handleStatusFilter">
+          <el-radio-button label="">全部</el-radio-button>
+          <el-radio-button label="PENDING">待审核</el-radio-button>
+          <el-radio-button label="APPROVED">已通过</el-radio-button>
+          <el-radio-button label="REJECTED">已驳回</el-radio-button>
+        </el-radio-group>
+      </div>
       <el-table :data="registrations" v-loading="loading" stripe>
         <el-table-column prop="competitionName" label="竞赛名称" min-width="180">
           <template #default="scope">
@@ -110,6 +119,7 @@ const router = useRouter()
 
 const loading = ref(false)
 const registrations = ref([])
+const statusFilter = ref('')
 
 const pagination = reactive({
   page: 1,
@@ -126,7 +136,8 @@ const fetchRegistrations = async () => {
   try {
     const res = await getRegistrations({
       page: pagination.page,
-      size: pagination.size
+      size: pagination.size,
+      status: statusFilter.value || undefined
     })
     registrations.value = res.data.records
     pagination.total = res.data.total
@@ -154,6 +165,11 @@ const formatDate = (date) => {
 
 const handleSizeChange = (size) => {
   pagination.size = size
+  pagination.page = 1
+  fetchRegistrations()
+}
+
+const handleStatusFilter = () => {
   pagination.page = 1
   fetchRegistrations()
 }
@@ -237,13 +253,13 @@ const handlePageChange = (page) => {
   font-weight: 600;
   background: var(--primary-gradient) !important;
   border: none !important;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
   transition: all 0.3s ease;
 }
 
 .action-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.55) !important;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.55) !important;
 }
 
 /* 表格卡片 */
@@ -267,7 +283,7 @@ const handlePageChange = (page) => {
 }
 
 .competition-link:hover {
-  color: #764ba2;
+  color: var(--primary-700);
   text-decoration: underline;
 }
 
@@ -320,7 +336,11 @@ const handlePageChange = (page) => {
   font-weight: 500;
 }
 
-/* 分页 */
+/* 筛选区域 */
+.filter-section {
+  padding: 16px 0 8px;
+  margin-bottom: 8px;
+}
 .pagination-section {
   display: flex;
   justify-content: center;

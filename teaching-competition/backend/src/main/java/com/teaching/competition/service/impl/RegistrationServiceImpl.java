@@ -37,6 +37,14 @@ public class RegistrationServiceImpl extends ServiceImpl<RegistrationMapper, Reg
     @Override
     @Transactional
     public void applyRegistration(RegistrationDTO dto, Long userId) {
+        // 检查是否重复报名
+        LambdaQueryWrapper<Registration> checkWrapper = new LambdaQueryWrapper<>();
+        checkWrapper.eq(Registration::getUserId, userId)
+                .eq(Registration::getCompetitionId, dto.getCompetitionId());
+        if (count(checkWrapper) > 0) {
+            throw new BusinessException("您已报名该竞赛，请勿重复报名");
+        }
+
         Registration registration = new Registration();
         BeanUtils.copyProperties(dto, registration);
         registration.setUserId(userId);
@@ -102,14 +110,28 @@ public class RegistrationServiceImpl extends ServiceImpl<RegistrationMapper, Reg
         if (StrUtil.isNotBlank(status)) {
             wrapper.eq(Registration::getStatus, status);
         }
-        if (StrUtil.isNotBlank(keyword)) {
-            wrapper.and(w -> w.like(Registration::getProjectName, keyword)
-                    .or().like(Registration::getDescription, keyword));
-        }
+        // 搜索支持：项目名称、描述（ Registration 表字段）
+        // 姓名/学号需要在 enrich 后过滤，因为 Registration 表没有这些字段
         wrapper.orderByDesc(Registration::getCreatedAt);
 
         Page<Registration> result = page(registrationPage, wrapper);
         List<RegistrationVO> voList = enrichWithDetails(result.getRecords());
+
+        // 如果有关键词且包含姓名/学号搜索，在已关联用户信息的结果中进行二次过滤
+        if (StrUtil.isNotBlank(keyword)) {
+            String lowerKeyword = keyword.toLowerCase();
+            voList = voList.stream()
+                    .filter(vo -> {
+                        // Registration 表字段匹配
+                        if (StrUtil.isNotBlank(vo.getProjectName()) && vo.getProjectName().toLowerCase().contains(lowerKeyword)) return true;
+                        if (StrUtil.isNotBlank(vo.getDescription()) && vo.getDescription().toLowerCase().contains(lowerKeyword)) return true;
+                        // 用户信息字段匹配
+                        if (StrUtil.isNotBlank(vo.getParticipantName()) && vo.getParticipantName().toLowerCase().contains(lowerKeyword)) return true;
+                        if (StrUtil.isNotBlank(vo.getStudentId()) && vo.getStudentId().toLowerCase().contains(lowerKeyword)) return true;
+                        return false;
+                    })
+                    .collect(Collectors.toList());
+        }
 
         return new PageResult<>(voList, result.getTotal(), size, page);
     }

@@ -29,10 +29,18 @@ export function getAwardList(competitionId) {
   })
 }
 
-//获取某竞赛的成绩结果
+//获取某竞赛的成绩结果（需登录）
 export function getCompetitionResults(competitionId) {
   return request({
     url: `/award/results/${competitionId}`,
+    method: 'get'
+  })
+}
+
+//获取某竞赛的成绩结果（公开，游客可见）
+export function getPublicResults(competitionId) {
+  return request({
+    url: `/award/public/results/${competitionId}`,
     method: 'get'
   })
 }
