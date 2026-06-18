@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#164e63"/><stop offset=".55" stop-color="#15803d"/><stop offset="1" stop-color="#1f2937"/></linearGradient></defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <rect x="96" y="92" width="1008" height="490" rx="36" fill="#ecfeff" opacity=".92"/>
+  <text x="150" y="214" font-family="Microsoft YaHei, Arial, sans-serif" font-size="56" font-weight="700" fill="#082f49">物联网应用设计竞赛</text>
+  <text x="153" y="292" font-family="Microsoft YaHei, Arial, sans-serif" font-size="30" fill="#155e75">IoT · Sensor · Smart Campus</text>
+  <g transform="translate(160 368)" fill="none" stroke="#0f766e" stroke-width="12" stroke-linecap="round">
+    <circle cx="0" cy="70" r="34" fill="#22c55e" stroke="none"/><circle cx="150" cy="20" r="34" fill="#06b6d4" stroke="none"/><circle cx="305" cy="92" r="34" fill="#84cc16" stroke="none"/>
+    <path d="M32 58 L118 32 M181 35 L273 78"/>
+  </g>
+  <text x="760" y="444" font-family="Microsoft YaHei, Arial, sans-serif" font-size="40" font-weight="700" fill="#064e3b">连接真实场景</text>
+</svg>

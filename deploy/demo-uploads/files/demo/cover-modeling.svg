@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7c2d12"/>
+      <stop offset="0.45" stop-color="#0369a1"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <rect x="94" y="94" width="1012" height="487" rx="34" fill="#f8fafc" opacity="0.92"/>
+  <text x="148" y="210" font-family="Microsoft YaHei, Arial, sans-serif" font-size="58" font-weight="700" fill="#0f172a">数学建模与数据分析赛</text>
+  <text x="150" y="292" font-family="Microsoft YaHei, Arial, sans-serif" font-size="30" fill="#475569">Modeling · Simulation · Insight</text>
+  <g transform="translate(148 360)" fill="none" stroke="#0369a1" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0 130 L80 50 L158 96 L250 0 L345 70"/>
+    <path d="M0 150 H390"/>
+    <path d="M0 150 V0"/>
+  </g>
+  <g transform="translate(760 336)">
+    <rect x="0" y="0" width="260" height="152" rx="20" fill="#0f172a"/>
+    <text x="34" y="62" font-family="Cambria Math, serif" font-size="44" fill="#bae6fd">f(x)=ax²+b</text>
+    <text x="34" y="116" font-family="Consolas, monospace" font-size="28" fill="#fef3c7">R² = 0.97</text>
+  </g>
+</svg>

@@ -1,0 +1,78 @@
+name: Deploy to Aliyun Server
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Build frontend on GitHub runner
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+          tar -czf ../frontend-dist.tar.gz dist
+
+      - name: Upload frontend artifact to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: 22
+          source: frontend-dist.tar.gz
+          target: /tmp/
+
+      - name: Run deploy script on server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: 22
+          command_timeout: 60m
+          script: |
+            set -e
+            cd /opt/teaching-competition
+            git fetch --all --prune
+            git reset --hard origin/main
+            # Clean orphan source files that might remain untracked on server
+            rm -f backend/src/main/java/com/teaching/competition/config/JacksonConfig.java
+            git clean -fd backend/src/main/java/com/teaching/competition/config || true
+            rm -rf frontend/dist
+            tar -xzf /tmp/frontend-dist.tar.gz -C frontend
+            SKIP_FRONTEND_BUILD=1 bash deploy/scripts/deploy-server.sh
+            ok=0
+            for i in $(seq 1 30); do
+              if curl -fsS http://127.0.0.1:8090/api/competition/public/list > /dev/null; then
+                ok=1
+                break
+              fi
+              sleep 2
+            done
+            if [ "$ok" -ne 1 ]; then
+              sudo systemctl status teaching-competition-backend --no-pager -l || true
+              sudo journalctl -u teaching-competition-backend -n 120 --no-pager || true
+              exit 1
+            fi

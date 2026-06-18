@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f766e"/>
+      <stop offset="0.55" stop-color="#1d4ed8"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ecfeff" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#dbeafe" stop-opacity="0.82"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <path d="M0 490 C210 420 325 565 520 505 C720 442 855 305 1200 360 L1200 675 L0 675 Z" fill="#14b8a6" opacity="0.2"/>
+  <rect x="92" y="96" width="1016" height="483" rx="36" fill="url(#panel)"/>
+  <text x="138" y="210" font-family="Microsoft YaHei, Arial, sans-serif" font-size="54" font-weight="700" fill="#0f172a">算法与数据结构挑战赛</text>
+  <text x="140" y="288" font-family="Microsoft YaHei, Arial, sans-serif" font-size="30" fill="#334155">Algorithm · Data Structure · Engineering</text>
+  <g transform="translate(140 360)" fill="none" stroke="#0f766e" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M82 0 L0 62 L82 124"/>
+    <path d="M210 0 L292 62 L210 124"/>
+    <path d="M154 -10 L128 134"/>
+  </g>
+  <rect x="720" y="340" width="260" height="120" rx="22" fill="#0f172a" opacity="0.9"/>
+  <text x="760" y="412" font-family="Consolas, monospace" font-size="30" fill="#67e8f9">while(true)</text>
+</svg>

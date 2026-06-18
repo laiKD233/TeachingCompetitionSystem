@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#831843"/><stop offset=".52" stop-color="#7c3aed"/><stop offset="1" stop-color="#111827"/></linearGradient></defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <rect x="96" y="96" width="1008" height="482" rx="36" fill="#fdf2f8" opacity=".94"/>
+  <text x="150" y="212" font-family="Microsoft YaHei, Arial, sans-serif" font-size="56" font-weight="700" fill="#500724">数字媒体创意设计赛</text>
+  <text x="152" y="292" font-family="Microsoft YaHei, Arial, sans-serif" font-size="30" fill="#7e22ce">Design · Interaction · Storytelling</text>
+  <g transform="translate(165 365)" fill="none" stroke="#a21caf" stroke-width="12" stroke-linecap="round"><rect x="0" y="0" width="250" height="150" rx="20"/><path d="M52 100 L100 58 L144 94 L186 48 L226 102"/></g>
+  <text x="744" y="430" font-family="Microsoft YaHei, Arial, sans-serif" font-size="42" font-weight="700" fill="#701a75">表达与交互</text>
+</svg>

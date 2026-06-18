@@ -1,0 +1,17 @@
+[Unit]
+Description=Teaching Competition Backend
+After=network.target mysql.service redis.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/teaching-competition/backend
+EnvironmentFile=/opt/teaching-competition/.env
+ExecStart=/usr/bin/java -jar /opt/teaching-competition/backend/target/competition-1.0.0.jar --spring.profiles.active=prod
+SuccessExitStatus=143
+Restart=always
+RestartSec=5
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

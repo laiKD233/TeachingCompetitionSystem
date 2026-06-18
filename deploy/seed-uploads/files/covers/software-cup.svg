@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f766e"/><stop offset=".55" stop-color="#2563eb"/><stop offset="1" stop-color="#111827"/></linearGradient></defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <rect x="90" y="96" width="1020" height="480" rx="34" fill="#f8fafc" opacity=".94"/>
+  <text x="142" y="214" font-family="Microsoft YaHei, Arial, sans-serif" font-size="56" font-weight="700" fill="#0f172a">江西财经大学软件创新杯</text>
+  <text x="145" y="294" font-family="Microsoft YaHei, Arial, sans-serif" font-size="30" fill="#334155">Software Engineering · Innovation · Practice</text>
+  <g transform="translate(148 374)" fill="none" stroke="#0f766e" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M82 0 L0 62 L82 124"/><path d="M218 0 L300 62 L218 124"/><path d="M158 -10 L132 134"/>
+  </g>
+  <rect x="738" y="352" width="284" height="126" rx="22" fill="#0f172a"/>
+  <text x="780" y="428" font-family="Consolas, monospace" font-size="32" fill="#67e8f9">build()</text>
+</svg>

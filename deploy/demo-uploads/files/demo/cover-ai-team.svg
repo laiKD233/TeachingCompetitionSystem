@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#134e4a"/>
+      <stop offset="0.5" stop-color="#166534"/>
+      <stop offset="1" stop-color="#1f2937"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f0fdf4" stop-opacity="0.96"/>
+      <stop offset="1" stop-color="#dcfce7" stop-opacity="0.78"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <rect x="98" y="92" width="1004" height="491" rx="38" fill="url(#card)"/>
+  <text x="148" y="212" font-family="Microsoft YaHei, Arial, sans-serif" font-size="58" font-weight="700" fill="#052e16">AI应用创新团队赛</text>
+  <text x="150" y="294" font-family="Microsoft YaHei, Arial, sans-serif" font-size="30" fill="#166534">Teamwork · Prototype · Campus AI</text>
+  <g transform="translate(172 378)">
+    <circle cx="0" cy="38" r="34" fill="#16a34a"/>
+    <circle cx="96" cy="38" r="34" fill="#22c55e"/>
+    <circle cx="192" cy="38" r="34" fill="#86efac"/>
+    <path d="M35 38 H61 M131 38 H157" stroke="#052e16" stroke-width="12" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(760 350)" fill="none" stroke="#166534" stroke-width="12" stroke-linecap="round">
+    <path d="M0 82 C70 -12 170 -12 240 82"/>
+    <path d="M30 82 C86 18 154 18 210 82"/>
+    <circle cx="120" cy="102" r="18" fill="#166534" stroke="none"/>
+  </g>
+</svg>

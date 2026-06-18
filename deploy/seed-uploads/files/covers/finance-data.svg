@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14532d"/><stop offset=".55" stop-color="#0f766e"/><stop offset="1" stop-color="#1e293b"/></linearGradient></defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <rect x="92" y="96" width="1016" height="480" rx="36" fill="#f0fdf4" opacity=".93"/>
+  <text x="146" y="212" font-family="Microsoft YaHei, Arial, sans-serif" font-size="56" font-weight="700" fill="#052e16">财经大数据分析挑战赛</text>
+  <text x="148" y="292" font-family="Microsoft YaHei, Arial, sans-serif" font-size="30" fill="#166534">Finance · Data · Decision</text>
+  <g transform="translate(150 364)" fill="none" stroke="#16a34a" stroke-width="14" stroke-linecap="round"><path d="M0 132 H390"/><path d="M34 116 V62"/><path d="M126 116 V18"/><path d="M218 116 V74"/><path d="M310 116 V32"/></g>
+  <text x="744" y="430" font-family="Microsoft YaHei, Arial, sans-serif" font-size="42" font-weight="700" fill="#14532d">洞察数据价值</text>
+</svg>

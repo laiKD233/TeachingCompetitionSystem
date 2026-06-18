@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e3a8a"/><stop offset=".55" stop-color="#0891b2"/><stop offset="1" stop-color="#111827"/></linearGradient></defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <rect x="94" y="96" width="1012" height="482" rx="36" fill="#eff6ff" opacity=".94"/>
+  <text x="146" y="212" font-family="Microsoft YaHei, Arial, sans-serif" font-size="56" font-weight="700" fill="#172554">创新创业计划竞赛</text>
+  <text x="148" y="292" font-family="Microsoft YaHei, Arial, sans-serif" font-size="30" fill="#1d4ed8">Business Plan · Product · Growth</text>
+  <g transform="translate(160 370)" fill="none" stroke="#1d4ed8" stroke-width="12" stroke-linejoin="round"><path d="M0 120 L84 52 L160 84 L264 0 L356 58"/><path d="M264 0 L264 72"/><path d="M356 58 L296 78"/></g>
+  <text x="742" y="428" font-family="Microsoft YaHei, Arial, sans-serif" font-size="42" font-weight="700" fill="#1e3a8a">从创意到落地</text>
+</svg>
